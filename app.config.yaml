@@ -1,0 +1,19 @@
+application:
+  runtimeManifest:
+    packages:
+      aio-commerce-yotpo-app:
+        license: Apache-2.0
+        actions:
+          yotpo-config:
+            function: src/app/actions/yotpo-config/index.js
+            runtime: nodejs:22
+            web: "yes"
+            annotations:
+              require-adobe-auth: false
+extensions:
+  commerce/backend-ui/1:
+    $include: src/commerce-backend-ui-1/ext.config.yaml
+operations:
+  view:
+    - type: web
+      impl: web
