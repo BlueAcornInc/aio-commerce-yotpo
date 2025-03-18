@@ -1,3 +1,9 @@
+operations:
+  view:
+    - type: web
+      impl: index.html
+actions: actions
+web: web-src
 runtimeManifest:
   packages:
     admin-ui-sdk:
@@ -5,13 +11,10 @@ runtimeManifest:
       actions:
         registration:
           function: actions/registration/index.js
-          runtime: nodejs:22
           web: "yes"
+          runtime: "nodejs:18"
+          inputs:
+            LOG_LEVEL: debug
           annotations:
             require-adobe-auth: false
             final: true
-      web:
-        src: 'src/commerce-backend-ui-1/web-src'
-        distProd: 'src/commerce-backend-ui-1/web-src/dist'
-hooks:
-  build-static: 'cd src/commerce-backend-ui-1/web-src && npm install && npm run build'

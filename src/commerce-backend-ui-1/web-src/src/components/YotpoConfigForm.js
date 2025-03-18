@@ -3,7 +3,6 @@ import {
     Button,
     Form,
     TextField,
-    Heading,
     Content,
     View,
     Picker,
@@ -52,7 +51,6 @@ export default function YotpoConfigForm({ actionUrl }) {
 
     return (
         <View padding="size-250">
-            <Heading level={1}>Yotpo Config Editor</Heading>
             <Content marginBottom="size-200">{statusMsg}</Content>
             <Form maxWidth="size-6000">
                 <TextField
