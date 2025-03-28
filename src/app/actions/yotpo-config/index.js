@@ -1,70 +1,67 @@
-const { Core } = require("@adobe/aio-sdk");
-const stateLib = require("@adobe/aio-lib-state");
-const { MAX_TTL } = stateLib;
+/*
+Copyright 2025 Adobe. All rights reserved.
+This file is licensed to you under the Apache License, Version 2.0.
+*/
+const { Core } = require('@adobe/aio-sdk');
 
+/**
+ * Returns a JSON response with an error message
+ */
+function errorResponse(message, statusCode = 400) {
+    return {
+        statusCode,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            success: false,
+            error: message
+        })
+    };
+}
+
+/**
+ * Main function
+ */
 async function main(params) {
-    const logger = Core.Logger("yotpo-config", { level: "info" });
+    const logger = Core.Logger('yotpo-config', { level: params.LOG_LEVEL || 'info' });
 
-    if (params.__ow_method === "post") {
-        const { appKey, apiSecret, status } = params;
+    try {
+        logger.debug('Raw params:', params);
 
-        if (!appKey || !apiSecret || !status) {
-            return {
-                statusCode: 400,
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    error: "Missing required fields (appKey, apiSecret, status).",
-                    receivedParams: params,
-                }),
-            };
+        // Only handle GET requests
+        if (params.__ow_method !== 'get') {
+            logger.warn('Unsupported HTTP method:', params.__ow_method);
+            return errorResponse('Method Not Allowed. Only GET is supported.', 405);
         }
 
-        const configToStore = { appKey, apiSecret, status };
-        const state = await stateLib.init();
-        await state.put("yotpoConfig", JSON.stringify(configToStore), {
-            ttl: MAX_TTL,
-        });
+        // Fetch config from environment variables
+        const yotpoApiKey = params.YOTPO_API_KEY || process.env.YOTPO_API_KEY;
+        const enableReviewsSync = String(params.ENABLE_REVIEWS_SYNC || process.env.ENABLE_REVIEWS_SYNC).toLowerCase() === 'true';
+
+        if (!yotpoApiKey) {
+            logger.error('YOTPO_API_KEY is not set in environment variables.');
+            return errorResponse('Yotpo API Key is not configured', 400);
+        }
+
+        const config = {
+            appKey: yotpoApiKey,
+            status: enableReviewsSync ? 'enabled' : 'disabled'
+        };
 
         return {
             statusCode: 200,
-            headers: { "Content-Type": "application/json" },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 success: true,
-                message: "Saved Yotpo config with max TTL",
-                savedConfig: configToStore,
-            }),
+                message: 'Loaded Yotpo config from environment variables',
+                config: {
+                    appKey: '****' + yotpoApiKey.slice(-4), // Mask the key
+                    status: config.status
+                }
+            })
         };
-    } else if (params.__ow_method === "get") {
-        const state = await stateLib.init();
-        const entry = await state.get("yotpoConfig");
-        let loadedConfig = {};
-        if (entry && entry.value) {
-            try {
-                loadedConfig = JSON.parse(entry.value);
-            } catch (e) {
-                logger.warn("Failed to parse stored JSON", e);
-                loadedConfig = {};
-            }
-        }
-
-        return {
-            statusCode: 200,
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                success: true,
-                message: "Loaded Yotpo config",
-                config: loadedConfig,
-            }),
-        };
-    } else {
-        return {
-            statusCode: 405,
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                error: "Method Not Allowed",
-                allowedMethods: ["GET", "POST"],
-            }),
-        };
+    } catch (error) {
+        logger.error('Unexpected error:', error);
+        return errorResponse('Server Error: ' + error.message, 500);
     }
 }
 
