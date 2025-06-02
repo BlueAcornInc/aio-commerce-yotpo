@@ -13,6 +13,18 @@ application:
               ENABLE_REVIEWS_SYN: $ENABLE_REVIEWS_SYN
             annotations:
               require-adobe-auth: true
+      admin-ui-sdk:
+        license: Apache-2.0
+        actions:
+          registration:
+            function: src/app/actions/registration/index.js
+            web: 'yes'
+            runtime: 'nodejs:18'
+            inputs:
+              LOG_LEVEL: debug
+            annotations:
+              require-adobe-auth: false
+              final: false
 configSchema:
   title: 'Commerce Yotpo Integration'
   description: 'Configure Yotpo integration for Adobe Commerce.'
@@ -25,7 +37,7 @@ configSchema:
     - title: 'Yotpo API Key'
       type: 'string'
       description: 'Your Yotpo API key.'
-      envKey: 'YOTPO_API_KEY'       
+      envKey: 'YOTPO_API_KEY'
 operations:
   view:
     - type: web

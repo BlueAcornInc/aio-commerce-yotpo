@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
+    "@adobe/aio-sdk": "^6.0.0",
     "@adobe/generator-app-events-generic": "^2.0.1"
   },
   "devDependencies": {
