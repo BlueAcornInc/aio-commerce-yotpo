@@ -9,28 +9,25 @@ application:
             runtime: nodejs:18
             web: "yes"
             inputs:
-              LOG_LEVEL: debug
               YOTPO_API_KEY: $YOTPO_API_KEY
-              ENABLE_REVIEWS_SYNC: $ENABLE_REVIEWS_SYNC
+              ENABLE_REVIEWS_SYN: $ENABLE_REVIEWS_SYN
             annotations:
-              require-adobe-auth: false
-
+              require-adobe-auth: true
 configSchema:
   title: 'Commerce Yotpo Integration'
-  description: 'Integrate Adobe Commerce with Yotpo for reviews and loyalty.'
+  description: 'Configure Yotpo integration for Adobe Commerce.'
   properties:
+    - title: 'Enable Review Synchronization'
+      type: 'boolean'
+      description: 'Enable or disable review synchronization.'
+      envKey: 'ENABLE_REVIEWS_SYN'
+      default: false
     - title: 'Yotpo API Key'
       type: 'string'
-      secret: true
-      description: 'Enter your Yotpo API key from your Yotpo account.'
-      envKey: 'YOTPO_API_KEY'
-    - title: 'Enable Reviews Sync'
-      type: 'boolean'
-      description: 'Enable synchronization of product reviews between Commerce and Yotpo.'
-      envKey: 'ENABLE_REVIEWS_SYNC'
-      default: true
-
-productDependencies:
-  - code: 'COMMC'
-    minVersion: '2.4.0'
-    maxVersion: '2.7.0'
+      description: 'Your Yotpo API key.'
+      envKey: 'YOTPO_API_KEY'       
+operations:
+  view:
+    - type: web
+      impl: web
+uix:
