@@ -1,0 +1,8 @@
+{
+  "name": "Yotpo",
+  "displayName": "Yotpo",
+  "description": "Yotpo for Adobe Commerce",
+  "platform": "web",
+  "id": "Yotpo",
+  "version": "1.0.0"
+}

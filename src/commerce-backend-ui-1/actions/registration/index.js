@@ -11,7 +11,7 @@ governing permissions and limitations under the License.
 */
 
 async function main() {
-    const extensionId = "YotpoReviews";
+    const extensionId = "Yotpo";
 
     return {
         statusCode: 200,
@@ -20,19 +20,19 @@ async function main() {
                 menuItems: [
                     {
                         id: `${extensionId}::first`,
-                        title: "Yotpo Reviews Configuration",
+                        title: "General Settings",
                         parent: `${extensionId}::apps`,
                         sortOrder: 1,
                     },
                     {
                         id: `${extensionId}::apps`,
-                        title: "Yotpo Reviews",
+                        title: "Yotpo",
                         isSection: true,
                         sortOrder: 100,
                     },
                 ],
                 page: {
-                    title: "Yotpo Reviews Configuration",
+                    title: "Yotpo",
                 },
             },
         },
