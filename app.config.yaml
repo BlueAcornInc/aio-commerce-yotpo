@@ -9,7 +9,7 @@ application:
             runtime: nodejs:22
             web: "yes"
             annotations:
-              require-adobe-auth: true
+              require-adobe-auth: false
 extensions:
   commerce/backend-ui/1:
     $include: src/commerce-backend-ui-1/ext.config.yaml
