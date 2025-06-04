@@ -1,8 +1,6 @@
 # Yotpo by Blue Acorn
 
-Welcome to the yotpo Configuration App for Adobe Commerce, built with Adobe App Builder!
-
-This app provides a lightweight, out-of-process solution to manage yotpo integration settings for Adobe Commerce. Configuration is set at install time via Adobe Exchange, and the app exposes a read-only endpoint to retrieve these settings for use in your Commerce instance.
+Welcome to the Yotpo App for Adobe Commerce. This app provides a lightweight, out-of-process solution to manage yotpo integration settings for Adobe Commerce. Configuration is set at install time via Adobe Exchange, and the app exposes a read-only endpoint to retrieve these settings for use in your Commerce instance.
 
 ## Setup
 
