@@ -10,8 +10,8 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-async function main() {
-  const extensionId = "Yotpo";
+async function main () {
+  const extensionId = 'Yotpo'
 
   return {
     statusCode: 200,
@@ -20,23 +20,23 @@ async function main() {
         menuItems: [
           {
             id: `${extensionId}::first`,
-            title: "General Settings",
+            title: 'General Settings',
             parent: `${extensionId}::apps`,
-            sortOrder: 1,
+            sortOrder: 1
           },
           {
             id: `${extensionId}::apps`,
-            title: "Yotpo",
+            title: 'Yotpo',
             isSection: true,
-            sortOrder: 100,
-          },
+            sortOrder: 100
+          }
         ],
         page: {
-          title: "Yotpo",
-        },
-      },
-    },
-  };
+          title: 'Yotpo'
+        }
+      }
+    }
+  }
 }
 
-exports.main = main;
+exports.main = main
