@@ -11,32 +11,32 @@ governing permissions and limitations under the License.
 */
 
 async function main() {
-    const extensionId = "Yotpo";
+  const extensionId = "Yotpo";
 
-    return {
-        statusCode: 200,
-        body: {
-            registration: {
-                menuItems: [
-                    {
-                        id: `${extensionId}::first`,
-                        title: "General Settings",
-                        parent: `${extensionId}::apps`,
-                        sortOrder: 1,
-                    },
-                    {
-                        id: `${extensionId}::apps`,
-                        title: "Yotpo",
-                        isSection: true,
-                        sortOrder: 100,
-                    },
-                ],
-                page: {
-                    title: "Yotpo",
-                },
-            },
+  return {
+    statusCode: 200,
+    body: {
+      registration: {
+        menuItems: [
+          {
+            id: `${extensionId}::first`,
+            title: "General Settings",
+            parent: `${extensionId}::apps`,
+            sortOrder: 1,
+          },
+          {
+            id: `${extensionId}::apps`,
+            title: "Yotpo",
+            isSection: true,
+            sortOrder: 100,
+          },
+        ],
+        page: {
+          title: "Yotpo",
         },
-    };
+      },
+    },
+  };
 }
 
 exports.main = main;
