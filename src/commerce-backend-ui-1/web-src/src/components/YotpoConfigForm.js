@@ -72,7 +72,7 @@ export default function YotpoConfigForm({ actionUrl }) {
   }
 
 const links = [
-    { label: 'Blue Acorn iCi', url: 'https://blueacornici.shop/' },
+    { label: 'Blue Acorn iCi', url: 'https://blueacornici.com/' },
     { label: 'Create an Issue', url: 'https://github.com/BlueAcornInc/aio-commerce-yotpo/issues/new' },
     { label: 'Issue Tracker', url: 'https://github.com/BlueAcornInc/aio-commerce-yotpo/issues' },
     { label: 'Contact Us', url: 'apps@blueacornici.com' },
