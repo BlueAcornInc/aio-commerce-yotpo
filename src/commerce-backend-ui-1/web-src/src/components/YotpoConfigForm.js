@@ -71,12 +71,14 @@ return (
     <View padding="size-250">
         <Content marginBottom="size-200">{statusMsg}</Content>
         <Form maxWidth="size-6000">
-            <Heading level={3}>General Settings</Heading>
+
+            <Heading level={3}>Storefront Blocks</Heading>
 
                 <Content>
-                    Yotpo must also be configured in the Adobe Commerce Storefront configs.json.
+                    Yotpo must also be configured in the Adobe Commerce Storefront configs.json.<br /><br />
                 </Content>
 
+            <Heading level={3}>General Settings</Heading>
 
             <TextField
                 label="App Key"
@@ -103,16 +105,18 @@ return (
                 <Item key="off">Off</Item>
             </Picker>
 
+            {!hasError && (
+                <Button variant="accent" onPress={handleSave} isDisabled={hasError}>
+                Save
+                </Button>
+            )}
+
             {hasError && (
-                <Content UNSAFE_style={{ color: "var(--spectrum-global-color-gray-500)" }}>
-                    <br />Secure configuration management not yet supported.
+                <Content UNSAFE_style={{ color: "#b0b0b0" }}>
+                    <br />Secure configuration management is not yet supported. Please manage any setting with environment variables.
                 </Content>
             )}
 
-
-            <Button variant="accent" onPress={handleSave} isDisabled={hasError}>
-                Save
-            </Button>
         </Form>
     </View>
 );
