@@ -1,6 +1,6 @@
 {
-  "name": "aio-commerce-yotpo-app",
-  "version": "0.0.1",
+  "name": "Yotpo by Blue Acorn",
+  "version": "1.0.1",
   "private": true,
   "dependencies": {
     "@adobe/aio-lib-state": "^5.1.0",
