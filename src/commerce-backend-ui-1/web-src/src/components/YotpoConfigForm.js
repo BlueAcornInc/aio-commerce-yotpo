@@ -9,7 +9,6 @@ import {
   Item,
   Heading,
   Grid,
-  Link,
   Text
 } from "@adobe/react-spectrum";
 
@@ -76,7 +75,7 @@ const links = [
     { label: 'Blue Acorn iCi', url: 'https://blueacornici.shop/' },
     { label: 'Create an Issue', url: 'https://github.com/BlueAcornInc/aio-commerce-yotpo/issues/new' },
     { label: 'Issue Tracker', url: 'https://github.com/BlueAcornInc/aio-commerce-yotpo/issues' },
-    { label: 'Contact Us', url: 'mailto:apps@blueacornici.com' },
+    { label: 'Contact Us', url: 'apps@blueacornici.com' },
     { label: 'Documentation', url: 'https://apps.blueacornici.shop/' },
 ]
 
@@ -143,16 +142,20 @@ return (
                 width="size-3600"
             >
                 {links.map(link => (
-                    <View key={link.url} borderWidth="thin" borderColor="dark" padding="size-200" borderRadius="medium">
-                        <a
-                            href={link.url}
-                            target="_top"
-                            rel="noopener noreferrer"
-                            style={{ textDecoration: 'none', color: 'inherit' }}
-                        >
-                            <Text>{link.label}</Text>
-                        </a>
-
+                    <View
+                        key={link.url}
+                        borderWidth="thin"
+                        borderColor="dark"
+                        padding="size-200"
+                        borderRadius="medium"
+                        onClick={() => {
+                            window.parent.postMessage({ type: 'open-link', url: link.url }, '*');
+                        }}
+                        role="button"
+                        tabIndex={0}
+                        style={{ cursor: 'pointer' }}
+                    >
+                        <Text><b>{link.label}</b>: {link.url}</Text>
                     </View>
                 ))}
             </Grid>
