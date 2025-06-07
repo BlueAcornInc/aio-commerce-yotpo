@@ -7,13 +7,17 @@ import {
   View,
   Picker,
   Item,
+  Heading,
 } from "@adobe/react-spectrum";
+
+const DEBUG = false; // Set to true for detailed error messages
 
 export default function YotpoConfigForm({ actionUrl }) {
   const [appKey, setAppKey] = useState("");
   const [apiSecret, setApiSecret] = useState("");
   const [status, setStatus] = useState("off");
   const [statusMsg, setStatusMsg] = useState("Loading config...");
+  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
     async function loadConfig() {
@@ -27,8 +31,15 @@ export default function YotpoConfigForm({ actionUrl }) {
           setStatus(data.config.status || "off");
         }
         setStatusMsg("Config loaded successfully");
+        setHasError(false);
       } catch (err) {
-        setStatusMsg(`Error loading config: ${err.message}`);
+        setHasError(true);
+        if (DEBUG) {
+          setStatusMsg(`Error loading config: ${err.message}`);
+        } else {
+          setStatusMsg("");
+          console.log("Error loading config:", err);
+        }
       }
     }
     loadConfig();
@@ -44,40 +55,65 @@ export default function YotpoConfigForm({ actionUrl }) {
       });
       if (!resp.ok) throw new Error(`POST failed: HTTP ${resp.status}`);
       setStatusMsg(`Configuration saved successfully`);
+      setHasError(false);
     } catch (err) {
-      setStatusMsg(`Error saving config: ${err.message}`);
+      setHasError(true);
+      if (DEBUG) {
+        setStatusMsg(`Error saving config: ${err.message}`);
+      } else {
+        setStatusMsg("");
+        console.error("Error saving config:", err);
+      }
     }
   }
 
-  return (
+return (
     <View padding="size-250">
-      <Content marginBottom="size-200">{statusMsg}</Content>
-      <Form maxWidth="size-6000">
-        <TextField
-          label="App Key"
-          value={appKey}
-          onChange={setAppKey}
-          isRequired
-        />
-        <TextField
-          label="API Secret"
-          value={apiSecret}
-          onChange={setApiSecret}
-          isRequired
-        />
-        <Picker
-          label="Status"
-          selectedKey={status}
-          onSelectionChange={setStatus}
-          isRequired
-        >
-          <Item key="on">On</Item>
-          <Item key="off">Off</Item>
-        </Picker>
-        <Button variant="accent" onPress={handleSave}>
-          Save
-        </Button>
-      </Form>
+        <Content marginBottom="size-200">{statusMsg}</Content>
+        <Form maxWidth="size-6000">
+            <Heading level={3}>General Settings</Heading>
+
+                <Content>
+                    Yotpo must also be configured in the Adobe Commerce Storefront configs.json.
+                </Content>
+
+
+            <TextField
+                label="App Key"
+                value={appKey}
+                onChange={setAppKey}
+                isRequired
+                isDisabled={hasError}
+            />
+            <TextField
+                label="API Secret"
+                value={apiSecret}
+                onChange={setApiSecret}
+                isRequired
+                isDisabled={hasError}
+            />
+            <Picker
+                label="Status"
+                selectedKey={status}
+                onSelectionChange={setStatus}
+                isRequired
+                isDisabled={hasError}
+            >
+                <Item key="on">On</Item>
+                <Item key="off">Off</Item>
+            </Picker>
+
+            {hasError && (
+                <Content UNSAFE_style={{ color: "var(--spectrum-global-color-gray-500)" }}>
+                    <br />Secure configuration management not yet supported.
+                </Content>
+            )}
+
+
+            <Button variant="accent" onPress={handleSave} isDisabled={hasError}>
+                Save
+            </Button>
+        </Form>
     </View>
-  );
+);
 }
