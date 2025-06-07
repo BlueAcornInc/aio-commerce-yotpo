@@ -82,7 +82,12 @@ const links = [
 
 return (
     <View padding="size-250">
-        <Content marginBottom="size-200">{statusMsg}</Content>
+        {DEBUG && statusMsg && (
+            <Content marginBottom="size-200" UNSAFE_style={{ color: "#d2691e" }}>
+                {statusMsg}
+            </Content>
+        )}
+
         <Form maxWidth="size-6000">
 
             <Heading level={3}>Storefront Blocks</Heading>
@@ -141,12 +146,13 @@ return (
                     <View key={link.url} borderWidth="thin" borderColor="dark" padding="size-200" borderRadius="medium">
                         <a
                             href={link.url}
-                            target="_blank"
+                            target="_top"
                             rel="noopener noreferrer"
                             style={{ textDecoration: 'none', color: 'inherit' }}
                         >
                             <Text>{link.label}</Text>
                         </a>
+
                     </View>
                 ))}
             </Grid>
