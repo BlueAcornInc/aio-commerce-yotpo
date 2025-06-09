@@ -7,6 +7,11 @@ application:
           yotpo-config:
             function: src/app/actions/yotpo-config/index.js
             runtime: nodejs:22
+            inputs:
+              LOG_LEVEL: debug
+              ENCRYPTION_KEY: $ENCRYPTION_KEY
+              ENCRYPTION_IV: $ENCRYPTION_IV
+              RUNTIME_NAMESPACE: $AIO_RUNTIME_NAMESPACE
             web: "yes"
             annotations:
               require-adobe-auth: true
@@ -17,3 +22,7 @@ operations:
   view:
     - type: web
       impl: web
+requiredProducts: 
+  - code: COMMC
+    minVersion: 2.4.7
+    maxVersion: 2.4.99

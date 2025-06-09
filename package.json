@@ -3,6 +3,7 @@
   "version": "1.0.1",
   "private": true,
   "dependencies": {
+    "@adobe/aio-lib-files": "^4.1.2",
     "@adobe/aio-lib-state": "^5.1.0",
     "@adobe/aio-sdk": "^6.0.0",
     "@adobe/eslint-config-aio-lib-config": "^4.0.0",
@@ -10,6 +11,7 @@
     "@adobe/react-spectrum": "^3.30.0",
     "@adobe/uix-guest": "^1.0.1",
     "core-js": "^3.27.2",
+    "crypto": "^1.0.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-error-boundary": "^3.1.4",
