@@ -1,6 +1,6 @@
 {
-  "name": "aio-commerce-yotpo-app",
-  "version": "0.0.1",
+  "name": "Yotpo by Blue Acorn",
+  "version": "1.0.1",
   "private": true,
   "dependencies": {
     "@adobe/aio-lib-files": "^4.1.2",
@@ -43,7 +43,25 @@
     "@adobe/generator-app-api-mesh"
   ],
   "author": {
-    "name": "Doug Hatcher <doug.hatcher@blueacornici.com> (https://blueacornici.com)"
+    "name": "Daniel Zaretsky",
+    "email": "daniel.zaretsky@blueacornici.com"
   },
-  "contributors": []
+  "contributors": [
+    {
+      "name": "Pedro Laris",
+      "email": "pedro.laris@blueacornici.com"
+    },
+    {
+      "name": "Sam Davis-Castro",
+      "email": "sam.davis-castro@blueacornici.com"
+    },
+    {
+      "name": "Doug Hatcher",
+      "email": "doug.hatcher@blueacornici.com"
+    },
+    {
+      "name": "Maxime Carey",
+      "email": "maxime.carey@blueacornici.com"
+    }
+  ]
 }
