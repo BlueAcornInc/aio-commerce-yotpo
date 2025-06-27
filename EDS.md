@@ -12,11 +12,11 @@ This guide assumes you have a compatible Edge Delivery Services installation alr
 
 3. In the _content repository_ `configs` and `configs-dev` sheets, add the following and publish:
 
-| key                    | value                                                                                                          |
-| ---------------------- | -------------------------------------------------------------------------------------------------------------- |
-| yotpo-config-url | https://xxxxxx-yotpo-stage.adobeioruntime.net/api/v1/web/aio-commerce-yotpo-app/yotpo-config |
-| yotpo.instance-id   | https://cdn-widgetsrepository.yotpo.com/v1/loader/2DscstHDudRbdPAOzC5foy1bLIBMZjhtyDjmsDJq |
-| yotpo.url           | 1039593                                                                                 |
+| key               | value                                                                                        |
+| ----------------- | -------------------------------------------------------------------------------------------- |
+| yotpo-config-url  | https://xxxxxx-yotpo-stage.adobeioruntime.net/api/v1/web/aio-commerce-yotpo-app/yotpo-config |
+| yotpo.instance-id | https://cdn-widgetsrepository.yotpo.com/v1/loader/2DscstHDudRbdPAOzC5foy1bLIBMZjhtyDjmsDJq   |
+| yotpo.url         | 1039593                                                                                      |
 
 This value can be found when you deploy the app in the deployment output in the console.
 

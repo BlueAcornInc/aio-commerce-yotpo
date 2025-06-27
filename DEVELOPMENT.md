@@ -231,11 +231,9 @@ Once the `server.js` is running, follow these steps to integrate and launch your
     Go to your Adobe Commerce admin area: `Stores -> Configuration -> Adobe Services -> Admin UI SDK`
 
     Under **General configuration**:
-
     - **Enable Admin UI SDK:** Select `Yes` (This enables the AdobeAdminims module to use the Admin UI SDK.)
 
     Under **Testing**:
-
     - **Enable testing:** Select `Yes`
     - **Local Server Base URL:** Enter `https://localhost:9090/`
     - **Mock AdobeAdminIms Module:** Select `Yes`
