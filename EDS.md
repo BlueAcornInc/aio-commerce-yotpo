@@ -15,6 +15,8 @@ This guide assumes you have a compatible Edge Delivery Services installation alr
 | key                    | value                                                                                                          |
 | ---------------------- | -------------------------------------------------------------------------------------------------------------- |
 | yotpo-config-url | https://xxxxxx-yotpo-stage.adobeioruntime.net/api/v1/web/aio-commerce-yotpo-app/yotpo-config |
+| yotpo.instance-id   | https://cdn-widgetsrepository.yotpo.com/v1/loader/2DscstHDudRbdPAOzC5foy1bLIBMZjhtyDjmsDJq |
+| yotpo.url           | 1039593                                                                                 |
 
 This value can be found when you deploy the app in the deployment output in the console.
 
