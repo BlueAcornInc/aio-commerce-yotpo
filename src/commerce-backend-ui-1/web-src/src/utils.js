@@ -1,5 +1,7 @@
+const actions = require("./config.json");
+
 /*
-Copyright 2024 Adobe. All rights reserved.
+Copyright 2025 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License. You may obtain a copy
 of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -9,19 +11,39 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-export async function callAction(props, action, operation, body = {}) {
-  const actions = require("./config.json");
+/**
+ * Calls a backend Adobe I/O Runtime action with the given operation and payload.
+ *
+ * @param {object} props Component props containing IMS information
+ * @param {string} action The action key from the config file
+ * @param {string} method The HTTP method to be passed to the backend
+ * @param {object|null} payload The optional request payload
+ * @returns {Promise<object>} The parsed JSON response from the backend
+ */
+export async function callAction(
+  props,
+  action,
+  method = "GET",
+  payload = null,
+) {
+  // config.json is generated when running app builder cli
+  // eslint-disable-next-line node/no-missing-require,node/no-unpublished-require
+
+  console.log(actions);
   const res = await fetch(actions[action], {
-    method: "POST",
+    method,
     headers: {
       "Content-Type": "application/json",
-      "x-gw-ims-org-id": props.ims.org,
-      authorization: `Bearer ${props.ims.token}`,
+      "x-gw-ims-org-id": props.imsOrgId,
+      authorization: `Bearer ${props.imsToken}`,
     },
-    body: JSON.stringify({
-      operation,
-      ...body,
-    }),
+    body:
+      method != "GET"
+        ? JSON.stringify({
+            method,
+            ...(payload ? { payload } : {}),
+          })
+        : null,
   });
 
   return await res.json();
