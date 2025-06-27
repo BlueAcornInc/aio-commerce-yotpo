@@ -1,149 +1,180 @@
-# Yotpo by Blue Acorn
+### Yotpo for Adobe Commerce (App Builder Extension)
 
-Welcome to the Yotpo App for Adobe Commerce. This app provides a lightweight, out-of-process solution to manage yotpo integration settings for Adobe Commerce. Configuration is set at install time via Adobe Exchange, and the app exposes a read-only endpoint to retrieve these settings for use in your Commerce instance.
+This Adobe App Builder extension provides a secure and efficient way for Adobe Commerce merchants to store and consume their Yotpo credentials. All configurations, including sensitive credentials, are managed directly within the Adobe Commerce Admin backend. The App Builder application securely retrieves these settings and makes them available to your storefront via API, enabling the display of user-generated content and integration with Yotpo services.
 
-## Setup
+### Table of Contents
 
-- Populate the `.env` file in the project root for local testing as shown [below](#env).
-- Ensure you’ve linked an Adobe I/O project using `aio app use` (see [Config](#config)).
+  * Features
+  * Requirements
+  * Installation
+      * Via Download
+      * Via Adobe Exchange Marketplace
+  * Configuration (Adobe Commerce Backend)
+  * Environment Variables (App Builder Operational)
+  * Usage
+  * Development
+  * Support
+  * Contributing
+  * License
 
-## Local Dev
+### Features
 
-- `aio app run` to start your local dev server.
-- The app will run on `localhost:9080` by default, serving the UI locally while actions are deployed to Adobe I/O Runtime.
-- To run actions locally as well, use `aio app run --local`.
+  * **Secure Credential Storage:** Yotpo credentials are stored securely within your Adobe Commerce backend, which the App Builder application can then securely retrieve at runtime.
+  * **Frontend API Access:** The App Builder application exposes a secure API endpoint for your frontend to retrieve necessary Yotpo credentials and configuration, enabling direct interaction with Yotpo services (e.g., displaying reviews, submitting content).
+  * **Centralized Configuration:** All Yotpo-specific settings are managed by the merchant directly within the familiar Adobe Commerce Admin Panel UI.
+  * **Easy Integration:** Designed for quick and straightforward deployment as an App Builder application.
+  * **Adobe App Builder Powered:** Leveraging the power and scalability of Adobe App Builder for reliable performance and easy deployment.
+  * **Marketplace Ready:** Compatible with Adobe Exchange for effortless installation and updates.
 
-## Test & Coverage
+### Requirements
 
-- Run `aio app test` to execute unit tests for UI and actions.
-- Run `aio app test --e2e` to run end-to-end tests.
+Before installing this extension, ensure you have the following:
 
-## Deploy & Cleanup
+  * **Adobe Commerce (Cloud or On-Premise):** Version 2.4.x or higher.
+  * **Adobe Developer App Builder Project:** An active App Builder project configured for your Adobe Commerce instance's organization.
+  * **Yotpo Account:** A valid Yotpo account with API access credentials (App Key and Secret Key).
+  * **Node.js and npm/yarn:** For local development and testing of the App Builder application.
+  * **Adobe I/O CLI:** For deploying App Builder actions.
+  * **Admin SDK Module:** The `magento/commerce-backend-sdk` module must be installed in your Adobe Commerce `composer.json`. Add the following line to your `composer.json` under the `require` section:
+    ```json
+    "magento/commerce-backend-sdk": "3.0.0 as 2.3.0"
+    ```
+    After adding, run `composer update`.
+  * **IMS Authentication:** Ensure IMS (Identity Management System) authentication is configured and working on your Adobe Commerce instance, as this is typically used for secure API communication with Adobe services, including App Builder actions.
 
-- `aio app deploy` to build and deploy actions to Adobe I/O Runtime and static files to CDN.
-- `aio app undeploy` to undeploy the app.
+### Installation
 
-## Config
+You can install this extension either by downloading it directly or through the Adobe Exchange Marketplace.
 
-### `.env`
+#### Via Download
 
-For local testing, create this file manually or generate it with `aio app use` if you have an Adobe I/O project config. It’s optional since configuration is managed via Adobe Exchange on deployment.
+1.  **Download the Extension:** Get the latest release package from the release page/repository URL here.
+2.  **Extract the Files:** Unzip the downloaded package to your preferred development directory. This directory contains the Adobe App Builder project.
+3.  **Configure App Builder Operational Environment Variables:** Before deploying, set the necessary environment variables for your App Builder actions as described in the Environment Variables (App Builder Operational) section. These are critical for the App Builder app's ability to communicate with Adobe Commerce and perform internal encryption. You can do this by creating a `.env` file in the root of the extracted App Builder project.
+4.  **Deploy App Builder Actions:**
+      * Navigate to the root directory of the extracted App Builder project (where the `app.json` or `manifest.yml` file is located).
+      * (Optional) Set App Builder Context: To avoid interactive prompts during deployment, you can explicitly set your project and workspace using `aio app use`:
+        ```bash
+        aio app use {YOUR_PROJECT_ID_TOKEN} {YOUR_WORKSPACE_NAME_TOKEN}
+        ```
+        (Replace `{YOUR_PROJECT_ID_TOKEN}` and `{YOUR_WORKSPACE_NAME_TOKEN}` with your actual values, which you can find in the Adobe Developer Console.)
+      * Deploy the App Builder actions using the Adobe I/O CLI:
+        ```bash
+        aio app deploy
+        ```
+        If you didn't use `aio app use`, follow the prompts to select your App Builder project and workspace.
+5.  **Configure Yotpo Settings in Adobe Commerce Backend:** After deploying the App Builder app, you must configure your Yotpo settings in your Adobe Commerce Admin panel as described in the Configuration (Adobe Commerce Backend) section.
 
-```bash
-# This file must **not** be committed to source control
+#### Via Adobe Exchange Marketplace
 
-## Adobe I/O Runtime credentials (optional, set via aio app use)
-# AIO_RUNTIME_AUTH=
-# AIO_RUNTIME_NAMESPACE=
+1.  **Log in to Adobe Commerce Admin:** Access your Adobe Commerce admin panel.
+2.  **Navigate to System \> Web Setup Wizard (or Component Manager in newer versions):**
+3.  **Find the Extension:** Search for "Yotpo" (or similar) in the Marketplace.
+4.  **Install the Extension:** Follow the on-screen instructions to install the extension. This process handles the deployment of the Adobe App Builder actions to your connected project. You will be prompted to provide values for the App Builder operational environment variables (e.g., `ENCRYPTION_KEY`, `ENCRYPTION_IV`) as listed in the Environment Variables (App Builder Operational) section.
+5.  **Configure Yotpo Settings in Adobe Commerce Backend:** After the marketplace installation is complete, proceed to configure all Yotpo-specific settings within your Adobe Commerce Admin panel as detailed in the Configuration (Adobe Commerce Backend) section.
+
+### Configuration (Adobe Commerce Backend)
+
+All Yotpo-specific configurations for this extension are managed by the merchant directly within the Adobe Commerce Admin Panel. The deployed Adobe App Builder application will then retrieve these settings at runtime via secure API calls to your Adobe Commerce instance.
+
+#### Access Yotpo Configuration in Adobe Commerce:
+
+1.  Log in to your Adobe Commerce Admin Panel.
+2.  Navigate to **Yotpo \> General Settings** in the left-hand navigation menu.
+3.  **Configure Yotpo Settings:** Fill in the following details using information provided by Yotpo:
+      * **Enable/Disable Yotpo Extension:** Select Yes or No to activate or deactivate the integration's functionality.
+      * **Yotpo App Key:** Your Yotpo App Key (sometimes called API Key or Client ID).
+      * **Yotpo Secret Key:** Your Yotpo Secret Key (sometimes called API Secret or Client Secret).
+4.  **Save Configuration:** Click "Save Config" to apply your changes in Adobe Commerce.
+5.  **Verify Functionality:** After configuration, test your frontend integration to ensure the App Builder app is correctly retrieving and utilizing the Yotpo settings.
+
+### Environment Variables (App Builder Operational)
+
+These environment variables are crucial for the operational functioning and security of the Adobe App Builder application itself. They allow the App Builder to connect to your Adobe Commerce instance and perform internal data protection. These are not the Yotpo-specific settings for your store, which are configured in the Adobe Commerce Admin.
+For local development, these are typically set in your `.env` file within your App Builder project. For deployed environments (e.g., via Adobe Exchange Marketplace or CI/CD), these variables are configured directly within the Adobe Developer Console UI for your specific App Builder workspace/action, or provided via marketplace prompts during installation.
+
+  * **ENCRYPTION\_KEY**
+      * Description: A 32-byte (64-character hexadecimal string) key used by the App Builder application for internal encryption operations, such as protecting sensitive configuration data retrieved from Adobe Commerce before processing or transmitting to the frontend.
+      * How to Generate: You can generate a secure key using `openssl`:
+        ```bash
+        openssl rand -hex 32
+        ```
+      * Example `.env` entry:
+        ```
+        ENCRYPTION_KEY=a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2
+        ```
+  * **ENCRYPTION\_IV**
+      * Description: A 16-byte (32-character hexadecimal string) Initialization Vector (IV) used in conjunction with the `ENCRYPTION_KEY` for encryption.
+      * How to Generate: You can generate a secure IV using `openssl`:
+        ```bash
+        openssl rand -hex 16
+        ```
+      * Example `.env` entry:
+        ```
+        ENCRYPTION_IV=f1e2d3c4b5a69876543210fedcba9876
+        ```
+
+**Important Notes:**
+
+  * **Security:** It's crucial to generate strong, unique values for `ENCRYPTION_KEY`, `ENCRYPTION_IV`
+  * **Don't Commit .env:** If you're using a `.env` file for local development, DO NOT commit it to your version control system (e.g., Git). Add `.env` to your `.gitignore` file to prevent accidental exposure of sensitive information.
+
+### Usage
+
+Once the App Builder application is deployed and its settings are configured in the Adobe Commerce backend, your Adobe Commerce frontend (or any other client-side application) can consume the Yotpo configuration and credentials through the App Builder API endpoint.
+
+#### Example Frontend API Call (Conceptual):
+
+Your frontend application will make an AJAX or Fetch request to the App Builder endpoint exposed by this extension. The specific URL will be available in your Adobe Developer Console for the deployed action.
+
+```javascript
+// Example: Fetching Yotpo configuration from the App Builder API
+const fetchYotpoConfig = async () => {
+    try {
+        // Replace with your actual deployed App Builder action URL
+        const appBuilderApiUrl = 'https://adobeio-static.net/api/v1/web/{YOUR_ORG_ID_TOKEN}/{YOUR_PROJECT_ID_TOKEN}/{YOUR_WORKSPACE_NAME_TOKEN}/yotpo-config'; // Adjust endpoint name if needed
+
+        const response = await fetch(appBuilderApiUrl);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const config = await response.json();
+        console.log('Yotpo Configuration:', config);
+        // Use config.appKey, config.secretKey, etc., as provided by the API
+    } catch (error) {
+        console.error('Error fetching Yotpo configuration:', error);
+    }
+};
+
+fetchYotpoConfig();
 ```
 
-#### Notes:
+**Important Security Note:**
+The App Builder action serves as a secure intermediary. While it retrieves sensitive data like API keys from your Adobe Commerce backend, it's critical that your frontend consumption strategy does not expose these raw credentials directly on the client-side if they're intended for server-to-server operations. Instead, the App Builder action should ideally use these credentials internally to make direct server-side API calls to Yotpo, or only pass securely derived, non-sensitive data to the frontend (e.g., a hashed version for client-side widget initialization if Yotpo supports it).
 
-- **Runtime Credentials**: Set via `aio app use` if deploying to a specific namespace.
+### Development
 
-### `app.config.yaml`
+For detailed instructions on setting up your development environment, testing, and contributing to this App Builder extension, please refer to our dedicated development guide:
+`doc/development.md`
 
-- The main configuration file defining the app’s implementation.
-- Defines the `yotpo-config` action
-- More details on configuration can be found [here](https://developer.adobe.com/app-builder/docs/guides/appbuilder-configuration/#appconfigyaml).
+### Support
 
-#### Action Dependencies
+For any issues, questions, or feature requests, please refer to the following:
 
-- Two options to resolve action dependencies:
-  1. **Packaged Action File**: Add dependencies to the root `package.json`, install with `npm install`, and point `function` in `app.config.yaml` to the entry file (e.g., `src/app/actions/yotpo-config/index.js`). Webpack will bundle it into a single minified file. Use this for smaller action sizes.
-  2. **Zipped Action Folder**: Add a `package.json` in the action folder (e.g., `src/app/actions/yotpo-config/`), list dependencies there, and point `function` to the folder. Dependencies will be installed and zipped for deployment. Use this to isolate action dependencies.
+  * **Documentation:** [Link to your detailed documentation (if available)]
+  * **Issue Tracker:** [Link to your GitHub Issues or similar platform]
+  * **Contact:** [Your support email or contact method]
 
-#### Current Setup
+### Contributing
 
-- The `yotpo-config` action uses the packaged file approach with dependencies in the root `package.json` (e.g., `@adobe/aio-sdk`).
+We welcome contributions\! If you'd like to contribute to this project, please follow these steps:
 
-## Debugging in VS Code
+1.  Fork the repository.
+2.  Create a new branch for your feature or bug fix.
+3.  Make your changes and ensure they adhere to our coding standards.
+4.  Write clear and concise commit messages.
+5.  Submit a pull request.
 
-While running your local server (`aio app run`), debug UI and actions using VS Code:
+### License
 
-- Open the debugger and select `WebAndActions` to debug both.
-- Use individual configs for UI or the `yotpo-config` action if preferred.
-
-## App Functionality
-
-- **Configuration**: Set via Adobe Commerce admin backend
-  - Enable/disable review synchornization
-  - Yotpo API Keys
-- **Action**: The `yotpo-config` action (GET-only) retrieves these settings from environment variables and returns them as JSON.
-
-## Integration with Adobe Commerce
-
-- Use the `yotpo-config` endpoint (`/api/v1/web/aio-commerce-yotpo-app/yotpo-config`) in a custom Commerce module to access settings.
-
-`aio app use`
-
-Generate the encryption keys and store them in the .env file.
-
-Encryption Key:
-
-`echo "ENCRYPTION_KEY=$(openssl rand -hex 32)" > .env`
-
-IV Key:
-
-`echo "ENCRYPTION_IV=$(openssl rand -hex 16)" > .env`
-
-Run the local test of your app:
-`aio app run`
-
-This deploys the runtime functions in Adobe cloud and the local form instance consumes it.
-
-Visit https://localhost:9080
-to see the form in action.
-
-## With Adobe Commerce
-
-You need the following prerequisites to test on local:
-
-- https://localhost:8443 AC instance up and running using the evergreen repo
-- Your app builder repo must be inside the AC root codebase.
-- Admin SDK module installed in AC composer.json the following line: `"magento/commerce-backend-sdk": "3.0.0 as 2.3.0",`
-- IMS auth on your local AC instance.
-
-## IMS Faking
-
-<https://developer.adobe.com/commerce/extensibility/admin-ui-sdk/configuration/>
-get node server snippet from there and paste it inside a random directory in your AC container. This must be done inside AC php container. Run `node server.js` after generating key/cert following instructions in that link above.
-
-This short circuits the ims authorization and serves you the aio app. In your aio app dir,
-
-## Next Steps
-
-Shell into magento container inside your aio app dir and set up aio:\
-`npm install -g @adobe/aio-cli`\
-Navigate to your AIO app repo codebase (inside the AC codebase as mentioned before)
-Run`aio auth:login`. Once installed make sure you have a project workspace already in [Adobe console developer (ACD) ](https://developer.adobe.com/console/projects/) set up.
-
-Go into your builder project workspace and select "Download All" to get the json at the top right of ACD.
-save this as `config.json` in your aio app dir. Run `aio app use config.json` to load the profile. To launch your app
-
-Once you got to this stage, and you still have `server.js` running:
-
-- Run `aio app dev`
-- Go to admin AC admin area:
-  Stores -> Configuration Adobe Services -> Admin UI SDK
-
-**General configuration**
-Enable Admin UI SDK: Yes
-(Enable the AdobeAdminims module to use the Admin UI SDK.)
-
-**Testing**
-Enable testing: Yes
-Local Server Base URL: https://localhost:9090/
-Mock AdobeAdminIms Module: Yes
-
-- Save
-- Click "Refresh Integrations" in that admin area
-
-This registers the menu and you should see it now after admin refresh. But the form wont load. to do that:
-
-## Backend Form
-
-- Cancel out of the aio app dev command currently running, It's already registered and does not need to run all the time.
-  If you have 2 apps running, 1 of them being Admin SDK form and 1 of them being another application ( reference your `app.config.yaml` file of your AIO app, then you need to run `aio app run -e [application_name]` to deploy the endpoints or runtime functions to adobe before your form can work completely if it has dependencies on it. You will see message in terminal saying it was successfully deployed. now terminate that command with ctrl+c.
-- Run `aio app run -e commerce/backend-ui/1`
-- Go back to Magento admin, refresh, and you should see the form load in the space now.
+This extension is released under the [MIT License]. See the `LICENSE` file for more details.
