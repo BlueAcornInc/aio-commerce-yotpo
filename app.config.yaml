@@ -14,7 +14,7 @@ application:
               RUNTIME_NAMESPACE: $AIO_RUNTIME_NAMESPACE
             web: "yes"
             annotations:
-              require-adobe-auth: true
+              require-adobe-auth: false
 extensions:
   commerce/backend-ui/1:
     $include: src/commerce-backend-ui-1/ext.config.yaml
@@ -22,7 +22,7 @@ operations:
   view:
     - type: web
       impl: web
-requiredProducts: 
+requiredProducts:
   - code: COMMC
     minVersion: 2.4.7
     maxVersion: 2.4.99
