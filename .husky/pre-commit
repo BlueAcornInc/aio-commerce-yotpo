@@ -1,1 +1,4 @@
 npm test
+npm run lint:check
+npm run format:check
+npm run code:check
