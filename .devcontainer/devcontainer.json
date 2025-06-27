@@ -1,0 +1,18 @@
+{
+  "name": "Yotpo",
+
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "..",
+    "args": {
+      "NODE_VERSION": "--lts"
+    }
+  },
+
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+
+  "postCreateCommand": "npm install",
+  "postAttachCommand": "aio app run -e commerce/backend-ui/1",
+
+  "forwardPorts": [9080]
+}
