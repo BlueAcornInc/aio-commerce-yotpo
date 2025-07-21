@@ -12,7 +12,7 @@ runtimeManifest:
         registration:
           function: actions/registration/index.js
           web: "yes"
-          runtime: "nodejs:18"
+          runtime: "nodejs:22"
           inputs:
             LOG_LEVEL: debug
           annotations:
@@ -21,15 +21,9 @@ runtimeManifest:
         config:
           function: actions/config/index.js
           web: yes
-          runtime: "nodejs:18"
+          runtime: "nodejs:22"
           inputs:
             LOG_LEVEL: debug
-            OAUTH_CLIENT_ID: $OAUTH_CLIENT_ID
-            OAUTH_CLIENT_SECRETS: $OAUTH_CLIENT_SECRETS
-            OAUTH_TECHNICAL_ACCOUNT_ID: $OAUTH_TECHNICAL_ACCOUNT_ID
-            OAUTH_TECHNICAL_ACCOUNT_EMAIL: $OAUTH_TECHNICAL_ACCOUNT_EMAIL
-            OAUTH_SCOPES: $OAUTH_SCOPES
-            OAUTH_IMS_ORG_ID: $OAUTH_IMS_ORG_ID
             ENCRYPTION_KEY: $ENCRYPTION_KEY
             ENCRYPTION_IV: $ENCRYPTION_IV
             RUNTIME_NAMESPACE: $AIO_RUNTIME_NAMESPACE

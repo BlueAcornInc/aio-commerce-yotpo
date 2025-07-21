@@ -7,7 +7,7 @@ This Adobe App Builder extension provides a secure and efficient way for Adobe C
 - [Features](#features)
 - [Requirements](#requirements)
 - [Installation](#installation)
-  - [Downloading the latest release](#downloading-the-latest-release)
+  - [Via Download](#via-download)
 - [Configuration (Adobe Commerce Backend)](#configuration-adobe-commerce-backend)
 - [Environment Variables (App Builder Operational)](#environment-variables-app-builder-operational)
 - [Usage](#usage)
@@ -20,11 +20,10 @@ This Adobe App Builder extension provides a secure and efficient way for Adobe C
 ## Features
 
 - **Secure Credential Storage:** Yotpo credentials are stored securely within your Adobe Commerce backend, which the App Builder application can then securely retrieve at runtime.
-- **Frontend API Access:** The App Builder application exposes a secure API endpoint for your frontend to retrieve necessary Yotpo credentials and configuration, enabling direct interaction with Yotpo services (e.g., displaying reviews, submitting content).
+- **Frontend API Access:** The App Builder application exposes a secure API endpoint for your frontend to retrieve necessary Yotpo credentials and configuration, enabling direct interaction with Yotpo services.
 - **Centralized Configuration:** All Yotpo-specific settings are managed by the merchant directly within the familiar Adobe Commerce Admin Panel UI.
 - **Easy Integration:** Designed for quick and straightforward deployment as an App Builder application.
 - **Adobe App Builder Powered:** Leveraging the power and scalability of Adobe App Builder for reliable performance and easy deployment.
-- **Marketplace Ready:** Compatible with Adobe Exchange for effortless installation and updates.
 
 ---
 
@@ -36,7 +35,7 @@ Before installing this extension, ensure you have the following:
 
 - **Adobe Developer App Builder Project:** An active App Builder project configured for your Adobe Commerce instance's organization.
 
-- **Yotpo Account:** A valid Yotpo account with API access credentials (App Key and Secret Key).
+- **Yotpo Account:** A valid Yotpo account with an **App Key** and **Secret Key**.
 
 - **Node.js and npm/yarn:** For local development and testing of the App Builder application.
 
@@ -45,12 +44,12 @@ Before installing this extension, ensure you have the following:
 - **Admin SDK Module:** The `magento/commerce-backend-sdk` module must be installed in your Adobe Commerce `composer.json`. Add the following line to your `composer.json` under the `require` section:
 
   ```json
-  "magento/commerce-backend-sdk": "3.0.0"
+  "magento/commerce-backend-sdk": "3.0.0 as 2.3.0"
   ```
 
   After adding, run `composer update`.
 
-- **IMS Authentication:** Ensure IMS (Identity Management System) authentication is configured and working on your Adobe Commerce instance, as this is typically used for secure API communication with Adobe services, including App Builder actions.
+- **IMS Authentication:** Ensure IMS (Identity Management System) authentication is configured and working on your Adobe Commerce instance.
 
 ---
 
@@ -58,16 +57,18 @@ Before installing this extension, ensure you have the following:
 
 You can install this extension by downloading it directly from the repository.
 
-### Downloading the latest release
+### Via Download
 
-1.  **Download the Extension:** Get the latest release package from the release page/repository URL here.
+1.  **Download the Extension:** Get the latest release package from the [release page](https://github.com/BlueAcornInc/aio-commerce-yotpo/releases).
 
 2.  **Extract the Files:** Unzip the downloaded package to your preferred development directory. This directory contains the Adobe App Builder project.
 
-3.  **Configure App Builder Operational Environment Variables:** Before deploying, set the necessary environment variables for your App Builder actions as described in the [Environment Variables (App Builder Operational)](#environment-variables-app-builder-operational) section. These are critical for the App Builder app's ability to communicate with Adobe Commerce and perform internal encryption. You can do this by creating a `.env` file in the root of the extracted App Builder project.
+3.  **Configure App Builder Operational Environment Variables:** Before deploying, set the necessary environment variables for your App Builder actions as described in the [Environment Variables (App Builder Operational)](#environment-variables-app-builder-operational) section. You can do this by creating a `.env` file in the root of the extracted App Builder project.
 
 4.  **Deploy App Builder Actions:**
-    - Navigate to the root directory of the extracted App Builder project (where the `app.json` or `manifest.yml` file is located).
+    - Navigate to the root directory of the extracted App Builder project (where the `app.config.yaml` file is located).
+
+    - Install npm dependencies using `npm install`
 
     - **(Optional) Set App Builder Context:** To avoid interactive prompts during deployment, you can explicitly set your project and workspace using `aio app use`:
 
@@ -76,6 +77,17 @@ You can install this extension by downloading it directly from the repository.
       ```
 
       (Replace `<your-project-id>` and `<your-workspace-name>` with your actual values, which you can find in the Adobe Developer Console.)
+
+      OR
+
+      You can use the following combination to select your destination environment interactively:
+
+      ```bash
+      aio console org select
+      aio console project select
+      aio console workspace select
+      aio app use --merge
+      ```
 
     - Deploy the App Builder actions using the Adobe I/O CLI:
 
@@ -91,40 +103,36 @@ You can install this extension by downloading it directly from the repository.
 
 ## Configuration (Adobe Commerce Backend)
 
-All Yotpo-specific configurations for this extension are managed by the merchant directly within the **Adobe Commerce Admin Panel**. The deployed Adobe App Builder application will then retrieve these settings at runtime via secure API calls to your Adobe Commerce instance.
+All Yotpo-specific configurations for this extension are managed by the merchant directly within the **Adobe Commerce Admin Panel**. The deployed Adobe App Builder application will then retrieve these settings at runtime.
 
 1.  **Access Yotpo Configuration in Adobe Commerce:**
     - Log in to your Adobe Commerce Admin Panel.
-    - Navigate to **Yotpo \> General Settings** in the left-hand navigation menu.
+    - Navigate to **Yotpo \> General Configuration** in the left-hand navigation menu.
+
 2.  **Configure Yotpo Settings:** Fill in the following details using information provided by Yotpo:
-    - **Enable/Disable Yotpo Extension:** Select Yes or No to activate or deactivate the integration's functionality.
-    - **Yotpo App Key:** Your Yotpo App Key (sometimes called API Key or Client ID).
-    - **Yotpo Secret Key:** Your Yotpo Secret Key (sometimes called API Secret or Client Secret).
-      _(Add any other Yotpo-specific configurations your extension supports, e.g., enabling specific widgets, order sync settings, etc.)_
+    - **Enable Yotpo Extension:** Select `Yes` or `No` to activate or deactivate the integration.
+    - **Yotpo App Key:** (Required) Your Yotpo App Key.
+    - **Yotpo Secret Key:** (Required) Your Yotpo Secret Key.
+
 3.  **Save Configuration:** Click "**Save Config**" to apply your changes in Adobe Commerce.
+
 4.  **Verify Functionality:** After configuration, test your frontend integration to ensure the App Builder app is correctly retrieving and utilizing the Yotpo settings.
 
 ---
 
 ## Environment Variables (App Builder Operational)
 
-These environment variables are crucial for the **operational functioning and security of the Adobe App Builder application itself**. They allow the App Builder to connect to your Adobe Commerce instance and perform internal data protection. These are **not** the Yotpo-specific settings for your store, which are configured in the Adobe Commerce Admin.
+These environment variables are crucial for the **operational functioning and security of the Adobe App Builder application itself**. These are **not** the Yotpo-specific settings for your store, which are configured in the Adobe Commerce Admin.
 
-For **local development**, these are typically set in your `.env` file within your App Builder project. For **deployed environments (e.g., via Adobe Exchange Marketplace or CI/CD)**, these variables are configured directly within the Adobe Developer Console UI for your specific App Builder workspace/action, or provided via marketplace prompts during installation.
+For **local development**, these are typically set in your `.env` file within your App Builder project. For **deployed environments via CI/CD**, these variables are configured directly within the Adobe Developer Console UI for your specific App Builder workspace/action.
 
 - `ENCRYPTION_KEY`
-  - **Description:** A 32-byte (64-character hexadecimal string) key used by the App Builder application for internal encryption operations, such as protecting sensitive configuration data retrieved from Adobe Commerce before processing or transmitting to the frontend.
+  - **Description:** A 32-byte (64-character hexadecimal string) key used by the App Builder application for internal encryption operations.
 
   - **How to Generate:** You can generate a secure key using `openssl`:
 
     ```bash
     openssl rand -hex 32
-    ```
-
-  - **Example `.env` entry:**
-
-    ```
-    ENCRYPTION_KEY=a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2
     ```
 
 - `ENCRYPTION_IV`
@@ -136,28 +144,22 @@ For **local development**, these are typically set in your `.env` file within yo
     openssl rand -hex 16
     ```
 
-  - **Example `.env` entry:**
-
-    ```
-    ENCRYPTION_IV=f1e2d3c4b5a69876543210fedcba9876
-    ```
-
 **Important Notes:**
 
-- **Security:** It's crucial to generate strong, unique values for `ENCRYPTION_KEY`, `ENCRYPTION_IV`. Don't use example values in production environments.
-- **Don't Commit `.env`:** If you're using a `.env` file for local development, **DO NOT commit it to your version control system (e.g., Git)**. Add `.env` to your `.gitignore` file to prevent accidental exposure of sensitive information.
+- **Security:** It's crucial to generate strong, unique values for `ENCRYPTION_KEY` and `ENCRYPTION_IV`.
+- **Don't Commit `.env`:** If you're using a `.env` file for local development, **DO NOT commit it to your version control system (e.g., Git)**. Add `.env` to your `.gitignore` file.
 
 ---
 
 ## Usage
 
-Once the App Builder application is deployed and its settings are configured in the Adobe Commerce backend, your Adobe Commerce frontend (or any other client-side application) can consume the Yotpo configuration and credentials through the App Builder API endpoint.
+Once the App Builder application is deployed and its settings are configured in the Adobe Commerce backend, your Adobe Commerce frontend can consume the Yotpo configuration through the App Builder API endpoint.
 
-**Adobe Commerce Storefront and Edge Delivery Services Blocks**
+**Adobe Commerce Storefont and Edge Delivery Services Blocks**
 
 Refer to the EDS and Storefront Blocks Setup Instructions to set this up in Adobe Commerce Storefront and Edge Delivery Services:
 
-[**`EDS.md`**](EDS.md)
+[**`EDS.md`**](https://www.google.com/search?q=EDS.md)
 
 **Example Frontend API Call (Conceptual):**
 
@@ -169,7 +171,7 @@ const fetchYotpoConfig = async () => {
   try {
     // Replace with your actual deployed App Builder action URL
     const appBuilderApiUrl =
-      "https://adobeio-static.net/api/v1/web/{YOUR_ORG_ID_TOKEN}/{YOUR_PROJECT_ID_TOKEN}/{YOUR_WORKSPACE_NAME_TOKEN}/yotpo-config"; // Adjust endpoint name if needed
+      "https://adobeio-static.net/api/v1/web/your_org_id/your_project_id/your_workspace_id/yotpo-config"; // Adjust endpoint name if needed
 
     const response = await fetch(appBuilderApiUrl);
     if (!response.ok) {
@@ -177,7 +179,7 @@ const fetchYotpoConfig = async () => {
     }
     const config = await response.json();
     console.log("Yotpo Configuration:", config);
-    // Use config.appKey, config.secretKey, etc., as provided by the API
+    // Use config.appKey, config.secretKey, etc., as needed by the Yotpo frontend integration
   } catch (error) {
     console.error("Error fetching Yotpo configuration:", error);
   }
@@ -188,7 +190,7 @@ fetchYotpoConfig();
 
 **Important Security Note:**
 
-The App Builder action serves as a secure intermediary. While it retrieves sensitive data like API keys from your Adobe Commerce backend, it's critical that your frontend consumption strategy does not expose these raw credentials directly on the client-side if they're intended for server-to-server operations. Instead, the App Builder action should ideally use these credentials internally to make direct server-side API calls to Yotpo, or only pass securely derived, non-sensitive data to the frontend (e.g., a hashed version for client-side widget initialization if Yotpo supports it).
+The App Builder action serves as a secure proxy. It retrieves configuration from your Adobe Commerce backend so that no sensitive credentials need to be stored or exposed on the client-side. The frontend should only receive the public-facing configuration necessary to initialize Yotpo services.
 
 ---
 
@@ -218,5 +220,3 @@ We welcome contributions\! If you'd like to contribute to this project, please f
 3.  Make your changes and ensure they adhere to our coding standards.
 4.  Write clear and concise commit messages.
 5.  Submit a pull request.
-
----
