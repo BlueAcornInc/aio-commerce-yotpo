@@ -59,6 +59,7 @@ describe("Admin Main Action", () => {
       expect(response.headers["Content-Type"]).toBe("application/json");
       const body = JSON.parse(response.body);
       expect(body.error).toContain("Missing required fields");
+      expect(body.error).toContain("instanceId");
       expect(mockLogger.error).toHaveBeenCalledWith(
         "Missing field for request",
         params,
@@ -70,6 +71,7 @@ describe("Admin Main Action", () => {
         appKey: "somekey",
         apiSecret: "THISISVERYSECRET",
         status: "enabled",
+        instanceId: "test-instance-123",
       };
       const params = {
         __ow_method: "post",
@@ -100,6 +102,7 @@ describe("Admin Main Action", () => {
         appKey: "somekey",
         apiSecret: "THISISVERYSECRET",
         status: "enabled",
+        instanceId: "test-instance-123",
       };
       const params = {
         __ow_method: "post",
@@ -128,6 +131,7 @@ describe("Admin Main Action", () => {
         appKey: "somekey",
         apiSecret: "THISISVERYSECRET",
         status: "enabled",
+        instanceId: "test-instance-123",
       };
       const params = {
         __ow_method: "get",

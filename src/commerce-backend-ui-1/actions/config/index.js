@@ -16,15 +16,16 @@ async function main(params) {
 
   // Check the method
   if (params.__ow_method === "post") {
-    const { appKey, apiSecret, status } = params.payload;
+    const { appKey, apiSecret, status, instanceId } = params.payload;
 
-    if (!appKey || !apiSecret || !status) {
+    if (!appKey || !apiSecret || !status || !instanceId) {
       logger.error("Missing field for request", params);
       return {
         statusCode: 400,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          error: "Missing required fields (appKey, apiSecret, status).",
+          error:
+            "Missing required fields (appKey, apiSecret, status, instanceId).",
           receivedParams: params,
         }),
       };
@@ -34,6 +35,7 @@ async function main(params) {
       appKey,
       apiSecret,
       status,
+      instanceId,
     };
 
     try {

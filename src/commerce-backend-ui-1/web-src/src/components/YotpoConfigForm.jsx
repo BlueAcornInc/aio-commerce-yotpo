@@ -27,6 +27,7 @@ export default function YotpoConfigForm(props) {
     status: "no",
     appKey: "",
     apiSecret: "",
+    instanceId: "",
   });
 
   const { statusMsg: loadStatusMsg, hasError: loadHasError } =
@@ -90,6 +91,13 @@ export default function YotpoConfigForm(props) {
           label="API Secret"
           value={formState.apiSecret}
           onChange={(val) => handleChange("apiSecret", val)}
+          isRequired
+          isDisabled={loadHasError}
+        />
+        <TextField
+          label="Instance ID"
+          value={formState.instanceId}
+          onChange={(val) => handleChange("instanceId", val)}
           isRequired
           isDisabled={loadHasError}
         />
