@@ -1,0 +1,4 @@
+.product-recommendations-container {
+  /* this section is hidden/blank if/when we decide to get yotpo support to enable recommendations */
+  display: none;
+}
