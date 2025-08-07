@@ -28,8 +28,6 @@ export async function callAction(
 ) {
   // config.json is generated when running app builder cli
   // eslint-disable-next-line node/no-missing-require,node/no-unpublished-require
-
-  console.log(actions);
   const res = await fetch(actions[action], {
     method,
     headers: {

@@ -16,16 +16,6 @@ import { Route, Routes, HashRouter } from "react-router";
 import ExtensionRegistration from "./ExtensionRegistration";
 
 function App(props) {
-  // use exc runtime event handlers
-  // respond to configuration change events (e.g. user switches org)
-  props.runtime.on("configuration", ({ imsOrg, imsToken }) => {
-    console.log("configuration change", { imsOrg, imsToken });
-  });
-  // respond to history change events
-  props.runtime.on("history", ({ type, path }) => {
-    console.log("history change", { type, path });
-  });
-
   return (
     <ErrorBoundary onError={onError} FallbackComponent={fallbackComponent}>
       <HashRouter>
