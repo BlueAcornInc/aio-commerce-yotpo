@@ -27,7 +27,6 @@ try {
   // if there are no errors, bootstrap the app in the Experience Cloud Shell
   init(bootstrapInExcShell);
 } catch (e) {
-  console.log("application not running in Adobe Experience Cloud Shell");
   // fallback mode, run the application without the Experience Cloud Runtime
   bootstrapRaw();
 }
@@ -60,7 +59,6 @@ function bootstrapInExcShell() {
   runtime.on("ready", ({ imsOrg, imsToken, imsProfile, locale }) => {
     // tell the exc-runtime object we are done
     runtime.done();
-    console.log("Ready! received imsProfile:", imsProfile);
     const ims = {
       profile: imsProfile,
       org: imsOrg,
@@ -72,8 +70,8 @@ function bootstrapInExcShell() {
   // set solution info, shortTitle is used when window is too small to display full title
   runtime.solution = {
     icon: "AdobeExperienceCloud",
-    title: "SampleExtension",
-    shortTitle: "JGR",
+    title: "Yotpo by Blue Acorn",
+    shortTitle: "Yotpo",
   };
-  runtime.title = "SampleExtension";
+  runtime.title = "Yotpo by Blue Acor";
 }

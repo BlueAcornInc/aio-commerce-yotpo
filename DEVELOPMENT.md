@@ -80,7 +80,7 @@ By default, the app will run on `localhost:9080`. In this mode, the UI is served
 To run both the UI and your actions locally, which can be useful for debugging and rapid development of your backend logic, use:
 
 ```bash
-aio app run --local
+aio app dev
 ```
 
 ## Testing & Coverage

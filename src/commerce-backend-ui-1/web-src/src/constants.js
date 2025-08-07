@@ -1,1 +1,1 @@
-export const EXTENSION_ID = "yotpo";
+export const EXTENSION_ID = "yotpo-reviews";

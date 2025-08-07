@@ -12,20 +12,10 @@ governing permissions and limitations under the License.
 import React from "react";
 import { Provider, lightTheme } from "@adobe/react-spectrum";
 import { ErrorBoundary } from "react-error-boundary";
-import { Route, Routes, HashRouter } from "react-router-dom";
+import { Route, Routes, HashRouter } from "react-router";
 import ExtensionRegistration from "./ExtensionRegistration";
 
 function App(props) {
-  // use exc runtime event handlers
-  // respond to configuration change events (e.g. user switches org)
-  props.runtime.on("configuration", ({ imsOrg, imsToken }) => {
-    console.log("configuration change", { imsOrg, imsToken });
-  });
-  // respond to history change events
-  props.runtime.on("history", ({ type, path }) => {
-    console.log("history change", { type, path });
-  });
-
   return (
     <ErrorBoundary onError={onError} FallbackComponent={fallbackComponent}>
       <HashRouter>

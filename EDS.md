@@ -10,15 +10,17 @@ This guide assumes you have a compatible Edge Delivery Services installation alr
 
 2. Commit and deploy these to your aem.page or aem.live instances to enable them.
 
-3. In the _content repository_ `configs` and `configs-dev` sheets, add the following and publish:
+3. In your config.json, add the following keys under public.default and redeploy your application:
 
-| key               | value                                                                                        |
-| ----------------- | -------------------------------------------------------------------------------------------- |
-| yotpo-config-url  | https://xxxxxx-yotpo-stage.adobeioruntime.net/api/v1/web/aio-commerce-yotpo-app/yotpo-config |
-| yotpo.instance-id | https://cdn-widgetsrepository.yotpo.com/v1/loader/2DscstHDudRbdPAOzC5foy1bLIBMZjhtyDjmsDJq   |
-| yotpo.url         | 1039593                                                                                      |
+```
+"yotpo": {
+    "config-url": "https://xxxxxx-yotpo-stage.adobeioruntime.net/api/v1/web/aio-commerce-yotpo-app/yotpo-config",
+    "instance-id": "1039593",
+    "url": "https://cdn-widgetsrepository.yotpo.com/v1/loader/2DscstHDudRbdPAOzC5foy1bLIBMZjhtyDjmsDJq"
+}
+```
 
-This value can be found when you deploy the app in the deployment output in the console.
+yotpo-config-url action value can be found when you deploy the app in the deployment output in the console.
 
 4. In your _content repository_ such as https://da.live/, navigate to the `<store>/products/default` document, and create a block named `yotpo`, like so:
 

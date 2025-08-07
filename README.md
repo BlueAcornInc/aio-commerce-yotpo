@@ -1,6 +1,6 @@
 # Yotpo by Blue Acorn
 
-This Adobe App Builder extension provides a secure and efficient way for Adobe Commerce merchants to store and consume their Yotpo credentials. All configurations, including sensitive credentials, are managed directly within the Adobe Commerce Admin backend. The App Builder application securely retrieves these settings and makes them available to your storefront via API, enabling the display of user-generated content and integration with Yotpo services.
+This Adobe App Builder extension provides a secure and efficient way for Adobe Commerce merchants to store and consume their Yotpo credentials. All configurations, including sensitive credentials, are managed directly within the Adobe lib-state backend and stored securily encrypted on lib-file backend for persistence. The App Builder application securely retrieves these settings and makes them available to your storefront via API, enabling the display of user-generated content and integration with Yotpo services.
 
 ## Table of Contents
 

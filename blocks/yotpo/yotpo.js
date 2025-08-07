@@ -12,11 +12,11 @@ export default async function decorate(block) {
 
   const config = {
     baseUrl: "https://cdn-widgetsrepository.yotpo.com/v1/loader",
-    endpoint: await getConfigValue("yotpo-config-url"),
+    endpoint: await getConfigValue("yotpo.config-url"),
     currency: await getConfigValue("commerce-base-currency-code"),
   };
 
-  const yotpoInstanceId = await getConfigValue("yotpo-instance-id");
+  const yotpoInstanceId = await getConfigValue("yotpo.instance-id");
 
   const widgetConfig = [
     // To Do, To-Do. Remove hard-coded yotpo-instance-id. I requested this be added to the Admin UI for Yotpo Config Editor.
@@ -43,8 +43,6 @@ export default async function decorate(block) {
     { attr: "data-yotpo-currency", value: config.currency },
     { attr: "class", value: "yotpo-widget-instance" },
   ];
-
-  console.log("test", widgetConfig);
 
   const addLoaderScript = ({ loaderScriptUrl }) => {
     loadScript(loaderScriptUrl);
