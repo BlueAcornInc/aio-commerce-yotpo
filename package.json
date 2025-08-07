@@ -33,7 +33,6 @@
   },
   "scripts": {
     "test": "jest --passWithNoTests ./src",
-    "e2e": "jest --collectCoverage=false --testRegex ./e2e",
     "lint": "eslint --ignore-pattern web-src --no-error-on-unmatched-pattern test src actions",
     "lint:check": "npm run lint -- --max-warnings=0",
     "lint:fix": "npm run lint -- --fix",
