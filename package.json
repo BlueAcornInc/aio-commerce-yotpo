@@ -9,7 +9,7 @@
     "@adobe/aio-sdk": "^6.0.0",
     "@adobe/exc-app": "^1.4.17",
     "@adobe/react-spectrum": "^3.43.0",
-    "@adobe/uix-guest": "^1.0.3",
+    "@adobe/uix-guest": "^0.8.3",
     "core-js": "^3.45.0",
     "prettier": "^3.6.2",
     "react": "^19.1.1",
