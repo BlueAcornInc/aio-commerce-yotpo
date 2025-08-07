@@ -1,20 +1,3 @@
-application:
-  runtimeManifest:
-    packages:
-      aio-commerce-yotpo-app:
-        license: Apache-2.0
-        actions:
-          yotpo-config:
-            function: src/app/actions/yotpo-config/index.js
-            runtime: nodejs:22
-            inputs:
-              LOG_LEVEL: debug
-              ENCRYPTION_KEY: $ENCRYPTION_KEY
-              ENCRYPTION_IV: $ENCRYPTION_IV
-              RUNTIME_NAMESPACE: $AIO_RUNTIME_NAMESPACE
-            web: "yes"
-            annotations:
-              require-adobe-auth: false
 extensions:
   commerce/backend-ui/1:
     $include: src/commerce-backend-ui-1/ext.config.yaml
@@ -24,5 +7,5 @@ operations:
       impl: web
 requiredProducts:
   - code: COMMC
-    minVersion: 2.4.7
+    minVersion: 2.4.5
     maxVersion: 2.4.99

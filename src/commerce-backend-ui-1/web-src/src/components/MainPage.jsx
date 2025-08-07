@@ -10,7 +10,7 @@ export const MainPage = (props) => {
   const [imsOrgId, setImsOrgId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const actionUrl = config["admin-ui-sdk/config"];
+  const actionUrl = config["yotpo/admin-config"];
 
   useEffect(() => {
     // Load IMS token for calling require-adobe-auth: true actions
