@@ -11,11 +11,17 @@ async function main(params) {
   try {
     const config = await readConfiguration(params, "yotpo");
 
+    const body = {
+      appKey: config.appKey,
+      status: config.status,
+      instanceId: config.instanceId,
+    };
+
     // Log and return the decrypted configuration
     logger.info("Configuration retrieved successfully.");
     return {
       statusCode: 200,
-      body: config,
+      body,
     };
   } catch (error) {
     if (error.code === "ERROR_FILE_NOT_EXISTS" || error.code === "ENOENT") {
