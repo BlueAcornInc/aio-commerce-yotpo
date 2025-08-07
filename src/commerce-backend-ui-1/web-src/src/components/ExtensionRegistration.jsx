@@ -12,6 +12,7 @@ governing permissions and limitations under the License.
 import { register } from "@adobe/uix-guest";
 import { MainPage } from "./MainPage";
 import { useEffect } from "react";
+import { EXTENSION_ID } from "../constants";
 
 export default function ExtensionRegistration(props) {
   useEffect(() => {
@@ -22,10 +23,8 @@ export default function ExtensionRegistration(props) {
 }
 
 const init = async () => {
-  const extensionId = "yotpo-reviews";
-
   await register({
-    id: extensionId,
+    id: EXTENSION_ID,
     methods: {},
   });
 };
