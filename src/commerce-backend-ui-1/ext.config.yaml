@@ -18,8 +18,20 @@ runtimeManifest:
           annotations:
             require-adobe-auth: true
             final: true
-        config:
-          function: actions/config/index.js
+    yotpo:
+      license: Apache-2.0
+      actions:
+        registration:
+          function: actions/registration/index.js
+          web: "yes"
+          runtime: "nodejs:22"
+          inputs:
+            LOG_LEVEL: debug
+          annotations:
+            require-adobe-auth: true
+            final: true
+        admin-config:
+          function: actions/admin-config/index.js
           web: yes
           runtime: "nodejs:22"
           inputs:
@@ -29,4 +41,16 @@ runtimeManifest:
             RUNTIME_NAMESPACE: $AIO_RUNTIME_NAMESPACE
           annotations:
             require-adobe-auth: true
+            final: true
+        public-config:
+          function: actions/public-config/index.js
+          web: "yes"
+          runtime: nodejs:22
+          inputs:
+            LOG_LEVEL: debug
+            ENCRYPTION_KEY: $ENCRYPTION_KEY
+            ENCRYPTION_IV: $ENCRYPTION_IV
+            RUNTIME_NAMESPACE: $AIO_RUNTIME_NAMESPACE
+          annotations:
+            require-adobe-auth: false
             final: true
