@@ -13,8 +13,8 @@ This guide assumes you have a compatible Edge Delivery Services installation alr
 3. In your config.json, add the following keys under public.default and redeploy your application:
 
 ```
-"yotpo-config-url" : "https://xxxxxx-yotpo-stage.adobeioruntime.net/api/v1/web/aio-commerce-yotpo-app/yotpo-config",
 "yotpo": {
+    "config-url": "https://xxxxxx-yotpo-stage.adobeioruntime.net/api/v1/web/aio-commerce-yotpo-app/yotpo-config",
     "instance-id": "1039593",
     "url": "https://cdn-widgetsrepository.yotpo.com/v1/loader/2DscstHDudRbdPAOzC5foy1bLIBMZjhtyDjmsDJq"
 }
