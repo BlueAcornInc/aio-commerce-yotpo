@@ -14,7 +14,7 @@ governing permissions and limitations under the License.
  * @returns {object} Registration object
  */
 async function main() {
-  const extensionId = "yotpo-reviews";
+  const extensionId = "yotpo";
 
   return {
     statusCode: 200,
