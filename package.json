@@ -11,6 +11,7 @@
     "@adobe/react-spectrum": "^3.43.0",
     "@adobe/uix-guest": "^0.8.3",
     "core-js": "^3.45.0",
+    "jest": "^30.0.5",
     "prettier": "^3.6.2",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
