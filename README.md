@@ -171,17 +171,17 @@ const fetchYotpoConfig = async () => {
   try {
     // Replace with your actual deployed App Builder action URL
     const appBuilderApiUrl =
-      "https://adobeio-static.net/api/v1/web/your_org_id/your_project_id/your_workspace_id/yotpo/public-config"; // Adjust endpoint name if needed
+      'https://adobeio-static.net/api/v1/web/your_org_id/your_project_id/your_workspace_id/yotpo/public-config'; // Adjust endpoint name if needed
 
     const response = await fetch(appBuilderApiUrl);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const config = await response.json();
-    console.log("Yotpo Configuration:", config);
+    console.log('Yotpo Configuration:', config);
     // Use config.appKey, config.secretKey, etc., as needed by the Yotpo frontend integration
   } catch (error) {
-    console.error("Error fetching Yotpo configuration:", error);
+    console.error('Error fetching Yotpo configuration:', error);
   }
 };
 

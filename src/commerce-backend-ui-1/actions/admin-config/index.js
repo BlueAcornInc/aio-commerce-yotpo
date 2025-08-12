@@ -1,8 +1,8 @@
-const { Core } = require("@adobe/aio-sdk");
+const { Core } = require('@adobe/aio-sdk');
 const {
   readConfiguration,
   writeConfiguration,
-} = require("../../../shared/configurationHelper");
+} = require('../../../shared/configurationHelper');
 
 /**
  * Main admin action
@@ -11,21 +11,21 @@ const {
  * @returns {object} Response object
  */
 async function main(params) {
-  const logger = Core.Logger("yotpo-config", { level: "info" });
-  const name = "yotpo";
+  const logger = Core.Logger('yotpo-config', { level: 'info' });
+  const name = 'yotpo';
 
   // Check the method
-  if (params.__ow_method === "post") {
+  if (params.__ow_method === 'post') {
     const { appKey, apiSecret, status, instanceId } = params.payload;
 
     if (!appKey || !apiSecret || !status || !instanceId) {
-      logger.error("Missing field for request", params);
+      logger.error('Missing field for request', params);
       return {
         statusCode: 400,
-        headers: { "Content-Type": "application/json" },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           error:
-            "Missing required fields (appKey, apiSecret, status, instanceId).",
+            'Missing required fields (appKey, apiSecret, status, instanceId).',
           receivedParams: params,
         }),
       };
@@ -43,10 +43,10 @@ async function main(params) {
 
       return {
         statusCode: 200,
-        headers: { "Content-Type": "application/json" },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           success: true,
-          message: "Saved Yotpo config",
+          message: 'Saved Yotpo config',
           savedConfig: configToStore,
         }),
       };
@@ -54,22 +54,22 @@ async function main(params) {
       logger.error(error);
       return {
         statusCode: 500,
-        headers: { "Content-Type": "application/json" },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           success: false,
-          message: "Error while saving configuration",
+          message: 'Error while saving configuration',
         }),
       };
     }
-  } else if (params.__ow_method === "get") {
+  } else if (params.__ow_method === 'get') {
     try {
       const loadedConfig = await readConfiguration(params, name);
       return {
         statusCode: 200,
-        headers: { "Content-Type": "application/json" },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           success: true,
-          message: "Loaded Yotpo config",
+          message: 'Loaded Yotpo config',
           config: loadedConfig,
         }),
       };
@@ -77,20 +77,20 @@ async function main(params) {
       logger.error(error);
       return {
         statusCode: 500,
-        headers: { "Content-Type": "application/json" },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           success: false,
-          message: "Error while loading configuration",
+          message: 'Error while loading configuration',
         }),
       };
     }
   } else {
     return {
       statusCode: 405,
-      headers: { "Content-Type": "application/json" },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        error: "Method Not Allowed",
-        allowedMethods: ["GET", "POST"],
+        error: 'Method Not Allowed',
+        allowedMethods: ['GET', 'POST'],
       }),
     };
   }

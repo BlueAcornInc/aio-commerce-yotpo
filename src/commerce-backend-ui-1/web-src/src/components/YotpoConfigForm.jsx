@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   Button,
   Form,
@@ -10,11 +10,11 @@ import {
   Item,
   Grid,
   Text,
-} from "@adobe/react-spectrum";
+} from '@adobe/react-spectrum';
 import {
   useYotpoConfigLoader,
   useYotpoConfigSaver,
-} from "../hooks/useYotpoConfig";
+} from '../hooks/useYotpoConfig';
 
 const DEBUG = false;
 
@@ -24,10 +24,10 @@ const DEBUG = false;
  */
 export default function YotpoConfigForm(props) {
   const [formState, setFormState] = useState({
-    status: "no",
-    appKey: "",
-    apiSecret: "",
-    instanceId: "",
+    status: 'no',
+    appKey: '',
+    apiSecret: '',
+    instanceId: '',
   });
 
   const { statusMsg: loadStatusMsg, hasError: loadHasError } =
@@ -48,23 +48,23 @@ export default function YotpoConfigForm(props) {
   };
 
   const links = [
-    { label: "Blue Acorn iCi", url: "https://blueacornici.com/" },
+    { label: 'Blue Acorn iCi', url: 'https://blueacornici.com/' },
     {
-      label: "Create an Issue",
-      url: "https://github.com/BlueAcornInc/aio-commerce-yotpo/issues/new",
+      label: 'Create an Issue',
+      url: 'https://github.com/BlueAcornInc/aio-commerce-yotpo/issues/new',
     },
     {
-      label: "Issue Tracker",
-      url: "https://github.com/BlueAcornInc/aio-commerce-yotpo/issues",
+      label: 'Issue Tracker',
+      url: 'https://github.com/BlueAcornInc/aio-commerce-yotpo/issues',
     },
-    { label: "Contact Us", url: "apps@blueacornici.com" },
-    { label: "Documentation", url: "https://apps.blueacornici.shop/" },
+    { label: 'Contact Us', url: 'apps@blueacornici.com' },
+    { label: 'Documentation', url: 'https://apps.blueacornici.shop/' },
   ];
 
   return (
     <View padding="size-250">
       {DEBUG && loadStatusMsg && (
-        <Content marginBottom="size-200" UNSAFE_style={{ color: "#d2691e" }}>
+        <Content marginBottom="size-200" UNSAFE_style={{ color: '#d2691e' }}>
           {loadStatusMsg}
         </Content>
       )}
@@ -83,28 +83,28 @@ export default function YotpoConfigForm(props) {
         <TextField
           label="App Key"
           value={formState.appKey}
-          onChange={(val) => handleChange("appKey", val)}
+          onChange={(val) => handleChange('appKey', val)}
           isRequired
           isDisabled={loadHasError}
         />
         <TextField
           label="API Secret"
           value={formState.apiSecret}
-          onChange={(val) => handleChange("apiSecret", val)}
+          onChange={(val) => handleChange('apiSecret', val)}
           isRequired
           isDisabled={loadHasError}
         />
         <TextField
           label="Instance ID"
           value={formState.instanceId}
-          onChange={(val) => handleChange("instanceId", val)}
+          onChange={(val) => handleChange('instanceId', val)}
           isRequired
           isDisabled={loadHasError}
         />
         <Picker
           label="Status"
           selectedKey={formState.status}
-          onSelectionChange={(val) => handleChange("status", val)}
+          onSelectionChange={(val) => handleChange('status', val)}
           isRequired
           isDisabled={loadHasError}
         >
@@ -117,7 +117,7 @@ export default function YotpoConfigForm(props) {
         </Button>
 
         {saveHasError && (
-          <Content UNSAFE_style={{ color: "#b0b0b0" }}>
+          <Content UNSAFE_style={{ color: '#b0b0b0' }}>
             <br />
             {saveStatusMsg}
           </Content>
@@ -126,7 +126,7 @@ export default function YotpoConfigForm(props) {
         <br />
         <br />
         <Heading level={3}>Support</Heading>
-        <Grid columns={["1fr 1fr"]} gap="size-200" width="size-3600">
+        <Grid columns={['1fr 1fr']} gap="size-200" width="size-3600">
           {links.map((link) => (
             <View
               key={link.url}
@@ -136,13 +136,13 @@ export default function YotpoConfigForm(props) {
               borderRadius="medium"
               onClick={() => {
                 window.parent.postMessage(
-                  { type: "open-link", url: link.url },
-                  "*",
+                  { type: 'open-link', url: link.url },
+                  '*',
                 );
               }}
               role="button"
               tabIndex={0}
-              style={{ cursor: "pointer" }}
+              style={{ cursor: 'pointer' }}
             >
               <Text>
                 <b>{link.label}</b>: {link.url}

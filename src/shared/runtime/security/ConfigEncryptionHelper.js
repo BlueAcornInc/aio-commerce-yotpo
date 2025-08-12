@@ -1,6 +1,6 @@
 // ConfigEncryptionHelper.js
 // https://github.com/adobe/amazon-sales-channel-app-builder/blob/main/actions-src/shared/security/credentialsEncryptionHelper.ts
-const { encrypt, decrypt } = require("./encrypt");
+const { encrypt, decrypt } = require('./encrypt');
 
 class ConfigEncryptionHelper {
   constructor(encryptionKey, ivKey) {

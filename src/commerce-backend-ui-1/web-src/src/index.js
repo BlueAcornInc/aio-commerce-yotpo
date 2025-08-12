@@ -9,21 +9,21 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-import "core-js/stable";
-import "regenerator-runtime/runtime";
+import 'core-js/stable';
+import 'regenerator-runtime/runtime';
 
-import { createRoot } from "react-dom/client";
+import { createRoot } from 'react-dom/client';
 
-import Runtime, { init } from "@adobe/exc-app";
+import Runtime, { init } from '@adobe/exc-app';
 
-import App from "./components/App";
-import "./index.css";
+import App from './components/App';
+import './index.css';
 
-window.React = require("react");
+window.React = require('react');
 /* Here you can bootstrap your application and configure the integration with the Adobe Experience Cloud Shell */
 try {
   // attempt to load the Experience Cloud Runtime
-  require("./exc-runtime");
+  require('./exc-runtime');
   // if there are no errors, bootstrap the app in the Experience Cloud Shell
   init(bootstrapInExcShell);
 } catch (e) {
@@ -32,7 +32,7 @@ try {
 }
 
 function renderApp(runtime, ims) {
-  const client = createRoot(document.getElementById("root"));
+  const client = createRoot(document.getElementById('root'));
 
   client.render(<App runtime={runtime} ims={ims} />);
 }
@@ -56,7 +56,7 @@ function bootstrapInExcShell() {
   // runtime.heroClick = () => window.alert('Did I ever tell you you\'re my hero?')
 
   // ready event brings in authentication/user info
-  runtime.on("ready", ({ imsOrg, imsToken, imsProfile, locale }) => {
+  runtime.on('ready', ({ imsOrg, imsToken, imsProfile, locale }) => {
     // tell the exc-runtime object we are done
     runtime.done();
     const ims = {
@@ -69,9 +69,9 @@ function bootstrapInExcShell() {
 
   // set solution info, shortTitle is used when window is too small to display full title
   runtime.solution = {
-    icon: "AdobeExperienceCloud",
-    title: "Yotpo by Blue Acorn",
-    shortTitle: "Yotpo",
+    icon: 'AdobeExperienceCloud',
+    title: 'Yotpo by Blue Acorn',
+    shortTitle: 'Yotpo',
   };
-  runtime.title = "Yotpo by Blue Acor";
+  runtime.title = 'Yotpo by Blue Acor';
 }

@@ -5,14 +5,14 @@ module.exports = {
     es2021: true,
   },
   parserOptions: {
-    ecmaVersion: "latest",
-    sourceType: "module",
+    ecmaVersion: 'latest',
+    sourceType: 'module',
   },
   extends: [
-    "eslint:recommended",
-    "plugin:jest/recommended",
-    "@adobe/eslint-config-aio-lib-config",
-    "plugin:prettier/recommended", // Enables eslint-plugin-prettier and eslint-config-prettier
+    'eslint:recommended',
+    'plugin:jest/recommended',
+    '@adobe/eslint-config-aio-lib-config',
+    'plugin:prettier/recommended', // Enables eslint-plugin-prettier and eslint-config-prettier
   ],
   plugins: [
     // You might not need to explicitly list 'prettier' here if 'plugin:prettier/recommended' handles it,
@@ -21,8 +21,8 @@ module.exports = {
   ],
   rules: {
     // General rules that apply to both environments
-    "no-console": "warn",
-    "no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
+    'no-console': 'warn',
+    'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
     // You can add specific ESLint rules here that Prettier doesn't handle.
     // For example, if you want to ensure specific naming conventions for variables, etc.
     // 'curly': 'error', // Example: Enforce curly braces for all control statements
@@ -32,7 +32,7 @@ module.exports = {
   // Overrides for different environments (these remain largely the same)
   overrides: [
     {
-      files: ["actions/**/*.js"],
+      files: ['actions/**/*.js'],
       env: {
         node: true,
         browser: false,
@@ -42,12 +42,12 @@ module.exports = {
       },
     },
     {
-      files: ["**/web-src/**/*.js", "**/web-src/**/*.jsx"],
+      files: ['**/web-src/**/*.js', '**/web-src/**/*.jsx'],
       env: {
         browser: true,
         node: false,
       },
-      parser: "@babel/eslint-parser",
+      parser: '@babel/eslint-parser',
       parserOptions: {
         ecmaFeatures: {
           jsx: true,
@@ -56,20 +56,20 @@ module.exports = {
       },
       settings: {
         react: {
-          version: "detect",
+          version: 'detect',
         },
       },
       extends: [
-        "plugin:react/recommended",
-        "plugin:react-hooks/recommended",
-        "plugin:jsx-a11y/recommended",
+        'plugin:react/recommended',
+        'plugin:react-hooks/recommended',
+        'plugin:jsx-a11y/recommended',
         // 'plugin:prettier/recommended' is already in the base extends,
         // so it will apply to overrides too, unless you specifically add more extends after it here.
       ],
-      plugins: ["react", "react-hooks", "jsx-a11y", "jsx"],
+      plugins: ['react', 'react-hooks', 'jsx-a11y', 'jsx'],
       rules: {
-        "react/prop-types": "off",
-        "react/react-in-jsx-scope": "off",
+        'react/prop-types': 'off',
+        'react/react-in-jsx-scope': 'off',
         // You can add specific React/JSX rules here
       },
     },

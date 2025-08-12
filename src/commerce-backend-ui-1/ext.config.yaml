@@ -11,8 +11,8 @@ runtimeManifest:
       actions:
         registration:
           function: actions/registration/index.js
-          web: "yes"
-          runtime: "nodejs:22"
+          web: 'yes'
+          runtime: 'nodejs:22'
           inputs:
             LOG_LEVEL: debug
           annotations:
@@ -23,8 +23,8 @@ runtimeManifest:
       actions:
         registration:
           function: actions/registration/index.js
-          web: "yes"
-          runtime: "nodejs:22"
+          web: 'yes'
+          runtime: 'nodejs:22'
           inputs:
             LOG_LEVEL: debug
           annotations:
@@ -33,7 +33,7 @@ runtimeManifest:
         admin-config:
           function: actions/admin-config/index.js
           web: yes
-          runtime: "nodejs:22"
+          runtime: 'nodejs:22'
           inputs:
             LOG_LEVEL: debug
             ENCRYPTION_KEY: $ENCRYPTION_KEY
@@ -44,7 +44,7 @@ runtimeManifest:
             final: true
         public-config:
           function: actions/public-config/index.js
-          web: "yes"
+          web: 'yes'
           runtime: nodejs:22
           inputs:
             LOG_LEVEL: debug

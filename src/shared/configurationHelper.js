@@ -1,10 +1,10 @@
-const stateLib = require("@adobe/aio-lib-state");
+const stateLib = require('@adobe/aio-lib-state');
 
 // Import the MAX_TTL constant
 const { MAX_TTL } = stateLib;
 
-const { readFile, writeFile } = require("./libFileRepository");
-const ConfigEncryptionHelper = require("./runtime/security/ConfigEncryptionHelper");
+const { readFile, writeFile } = require('./libFileRepository');
+const ConfigEncryptionHelper = require('./runtime/security/ConfigEncryptionHelper');
 
 /**
  * Write the configuration to a file
@@ -52,7 +52,7 @@ async function readConfiguration(params, name) {
     const helper = new ConfigEncryptionHelper(ENCRYPTION_KEY, ENCRYPTION_IV);
     const filePath = `${RUNTIME_NAMESPACE}-${name}.enc`;
     const encryptedBuffer = await readFile(filePath);
-    const encryptedConfig = JSON.parse(encryptedBuffer.toString("utf8"));
+    const encryptedConfig = JSON.parse(encryptedBuffer.toString('utf8'));
 
     // Decrypt the configuration
     config = helper.decryptConfig(encryptedConfig);

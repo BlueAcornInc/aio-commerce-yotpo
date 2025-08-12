@@ -1,6 +1,6 @@
-const { Core } = require("@adobe/aio-sdk");
-const logger = Core.Logger("getConfig", { level: "info" });
-const { readConfiguration } = require("../../../shared/configurationHelper");
+const { Core } = require('@adobe/aio-sdk');
+const logger = Core.Logger('getConfig', { level: 'info' });
+const { readConfiguration } = require('../../../shared/configurationHelper');
 
 /**
  *
@@ -9,7 +9,7 @@ const { readConfiguration } = require("../../../shared/configurationHelper");
  */
 async function main(params) {
   try {
-    const config = await readConfiguration(params, "yotpo");
+    const config = await readConfiguration(params, 'yotpo');
 
     const body = {
       appKey: config.appKey,
@@ -18,23 +18,23 @@ async function main(params) {
     };
 
     // Log and return the decrypted configuration
-    logger.info("Configuration retrieved successfully.");
+    logger.info('Configuration retrieved successfully.');
     return {
       statusCode: 200,
       body,
     };
   } catch (error) {
-    if (error.code === "ERROR_FILE_NOT_EXISTS" || error.code === "ENOENT") {
-      logger.info("No configuration file found, returning empty config.");
+    if (error.code === 'ERROR_FILE_NOT_EXISTS' || error.code === 'ENOENT') {
+      logger.info('No configuration file found, returning empty config.');
       return {
         statusCode: 200,
         body: {},
       };
     }
-    logger.error("Unable to load configuration", error);
+    logger.error('Unable to load configuration', error);
     return {
       statusCode: 500,
-      body: { error: "Failed to retrieve and decrypt configuration." },
+      body: { error: 'Failed to retrieve and decrypt configuration.' },
     };
   }
 }

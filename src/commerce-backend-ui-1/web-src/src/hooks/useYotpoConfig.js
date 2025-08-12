@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { callAction } from "../utils";
+import { useState, useEffect } from 'react';
+import { callAction } from '../utils';
 
 /**
  *
@@ -7,7 +7,7 @@ import { callAction } from "../utils";
  * @param setFormState
  */
 export function useYotpoConfigLoader(props, setFormState) {
-  const [statusMsg, setStatusMsg] = useState("Loading config...");
+  const [statusMsg, setStatusMsg] = useState('Loading config...');
   const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
@@ -16,16 +16,16 @@ export function useYotpoConfigLoader(props, setFormState) {
      */
     async function loadConfig() {
       try {
-        const data = await callAction(props, "yotpo/admin-config", "GET");
+        const data = await callAction(props, 'yotpo/admin-config', 'GET');
         if (data) {
           setFormState((prevState) => ({ ...prevState, ...data.config }));
         }
-        setStatusMsg("Config loaded successfully");
+        setStatusMsg('Config loaded successfully');
         setHasError(false);
       } catch (err) {
         setHasError(true);
         setStatusMsg(`Error loading config: ${err.message}`);
-        console.error("Error loading config:", err);
+        console.error('Error loading config:', err);
       }
     }
     loadConfig();
@@ -39,7 +39,7 @@ export function useYotpoConfigLoader(props, setFormState) {
  * @param props
  */
 export function useYotpoConfigSaver(props) {
-  const [statusMsg, setStatusMsg] = useState("");
+  const [statusMsg, setStatusMsg] = useState('');
   const [hasError, setHasError] = useState(false);
 
   /**
@@ -48,13 +48,13 @@ export function useYotpoConfigSaver(props) {
    */
   async function saveConfig(config) {
     try {
-      await callAction(props, "yotpo/admin-config", "POST", config);
-      setStatusMsg("Configuration saved successfully");
+      await callAction(props, 'yotpo/admin-config', 'POST', config);
+      setStatusMsg('Configuration saved successfully');
       setHasError(false);
     } catch (err) {
       setHasError(true);
       setStatusMsg(`Error saving config: ${err.message}`);
-      console.error("Error saving config:", err);
+      console.error('Error saving config:', err);
     }
   }
 

@@ -1,4 +1,4 @@
-const actions = require("./config.json");
+const actions = require('./config.json');
 
 /*
 Copyright 2025 Adobe. All rights reserved.
@@ -23,7 +23,7 @@ governing permissions and limitations under the License.
 export async function callAction(
   props,
   action,
-  method = "GET",
+  method = 'GET',
   payload = null,
 ) {
   // config.json is generated when running app builder cli
@@ -31,12 +31,12 @@ export async function callAction(
   const res = await fetch(actions[action], {
     method,
     headers: {
-      "Content-Type": "application/json",
-      "x-gw-ims-org-id": props.imsOrgId,
+      'Content-Type': 'application/json',
+      'x-gw-ims-org-id': props.imsOrgId,
       authorization: `Bearer ${props.imsToken}`,
     },
     body:
-      method != "GET"
+      method != 'GET'
         ? JSON.stringify({
             method,
             ...(payload ? { payload } : {}),

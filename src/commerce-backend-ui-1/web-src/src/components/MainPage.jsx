@@ -1,16 +1,16 @@
-import { attach } from "@adobe/uix-guest";
-import { useEffect, useState } from "react";
-import YotpoConfigForm from "./YotpoConfigForm";
-import { EXTENSION_ID } from "../constants";
-import { View } from "@adobe/react-spectrum";
-import config from "../config.json";
+import { attach } from '@adobe/uix-guest';
+import { useEffect, useState } from 'react';
+import YotpoConfigForm from './YotpoConfigForm';
+import { EXTENSION_ID } from '../constants';
+import { View } from '@adobe/react-spectrum';
+import config from '../config.json';
 
 export const MainPage = (props) => {
   const [imsToken, setImsToken] = useState(null);
   const [imsOrgId, setImsOrgId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const actionUrl = config["yotpo/admin-config"];
+  const actionUrl = config['yotpo/admin-config'];
 
   useEffect(() => {
     // Load IMS token for calling require-adobe-auth: true actions
@@ -25,11 +25,11 @@ export const MainPage = (props) => {
           // See https://developer.adobe.com/commerce/extensibility/admin-ui-sdk/extension-points/#shared-contexts
           const guestConnection = await attach({ id: EXTENSION_ID });
           const context = guestConnection?.sharedContext;
-          setImsToken(context?.get("imsToken"));
-          setImsOrgId(context?.get("imsOrgId"));
+          setImsToken(context?.get('imsToken'));
+          setImsOrgId(context?.get('imsOrgId'));
         }
       } catch (error) {
-        console.error("Error loading IMS info:", error);
+        console.error('Error loading IMS info:', error);
       } finally {
         setIsLoading(false);
       }
