@@ -1,12 +1,12 @@
 name: Trigger Docs Deployment
 on:
-  release:
-    types: [published]
-  # push:
-  #   branches: ["main"]
-  #   paths:
-  #     - '**.md'
-  #     - '**.markdown'
+  # release:
+  #   types: [published]
+  push:
+    branches: ["main"]
+    paths:
+      - "**.md"
+      - "**.markdown"
 
 jobs:
   trigger-deployment:
@@ -21,10 +21,10 @@ jobs:
           event-type: release-trigger
           client-payload: |
             {
-              "repository": "${{ github.repository }}",
-              "tag": "${{ github.ref_name }}",
-              "release_url": "${{ github.event.head_commit.url }}",
-              "package_name": "${{ github.event.repository.name }}",
-              "sha": "${{ github.sha }}",
-              "commit_message": "${{ github.event.head_commit.message }}"
+              "repository": ${{ toJSON(github.repository) }},
+              "tag": ${{ toJSON(github.ref_name) }},
+              "release_url": ${{ toJSON(github.event.head_commit.url) }},
+              "package_name": ${{ toJSON(github.event.repository.name) }},
+              "sha": ${{ toJSON(github.sha) }},
+              "commit_message": ${{ toJSON(github.event.head_commit.message) }}
             }
