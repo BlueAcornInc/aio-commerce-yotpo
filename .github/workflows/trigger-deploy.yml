@@ -11,7 +11,7 @@ on:
 jobs:
   trigger-deployment:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Trigger deployment in main repo
         uses: peter-evans/repository-dispatch@v2
