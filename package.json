@@ -24,8 +24,10 @@
     "@babel/eslint-parser": "^7.28.0",
     "@babel/preset-env": "^7.28.0",
     "@babel/preset-react": "^7.27.1",
+    "eslint": "^8",
     "eslint-config-prettier": "^10.1.8",
     "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-jest": "^27.2.3",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-prettier": "^5.5.4",
     "eslint-plugin-react": "^7.37.5",
@@ -41,7 +43,8 @@
     "format:fix": "npm run format:check -- --write",
     "code:check": "npm run format:check && npm run lint:check",
     "code:fix": "npm run format:fix && npm run lint:fix",
-    "prepare": "husky"
+    "prepare": "husky",
+    "fix-all": "npm run format:fix && npm run lint:fix"
   },
   "engines": {
     "node": "^14.18 || ^16.13 || >=18"
