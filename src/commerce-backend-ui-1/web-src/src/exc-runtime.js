@@ -33,7 +33,7 @@ governing permissions and limitations under the License.
     throw new Error("Module Runtime: Must be HTTPS!");
   if (
     !/^(exc-unifiedcontent\.)?experience(-qa|-stage|-cdn|-cdn-stage)?\.adobe\.(com|net)$/.test(
-      o.hostname,
+      o.hostname
     ) &&
     !/localhost\.corp\.adobe\.com$/.test(o.hostname)
   )

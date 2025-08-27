@@ -137,7 +137,7 @@ export default function YotpoConfigForm(props) {
               onClick={() => {
                 window.parent.postMessage(
                   { type: "open-link", url: link.url },
-                  "*",
+                  "*"
                 );
               }}
               role="button"

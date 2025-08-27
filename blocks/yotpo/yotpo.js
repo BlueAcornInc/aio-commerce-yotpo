@@ -20,7 +20,7 @@ export default async function decorate(block) {
       }
     } else {
       console.log(
-        "Yotpo widget status is off, skipping block append and widget init.",
+        "Yotpo widget status is off, skipping block append and widget init."
       );
     }
   };
@@ -34,7 +34,7 @@ export default async function decorate(block) {
     {
       attr: "data-yotpo-product-id",
       value: window.location.pathname.slice(
-        window.location.pathname.lastIndexOf("/") + 1,
+        window.location.pathname.lastIndexOf("/") + 1
       ),
     },
     {
