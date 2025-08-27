@@ -62,7 +62,7 @@ describe("Admin Main Action", () => {
       expect(body.error).toContain("instanceId");
       expect(mockLogger.error).toHaveBeenCalledWith(
         "Missing field for request",
-        params,
+        params
       );
     });
 
@@ -92,7 +92,7 @@ describe("Admin Main Action", () => {
       expect(mockWriteConfiguration).toHaveBeenCalledWith(
         mockPayload,
         "yotpo",
-        params,
+        params
       );
       expect(mockLogger.error).not.toHaveBeenCalled();
     });

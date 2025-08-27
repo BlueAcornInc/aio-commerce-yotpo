@@ -24,7 +24,7 @@ export async function callAction(
   props,
   action,
   method = "GET",
-  payload = null,
+  payload = null
 ) {
   // config.json is generated when running app builder cli
   // eslint-disable-next-line node/no-missing-require,node/no-unpublished-require

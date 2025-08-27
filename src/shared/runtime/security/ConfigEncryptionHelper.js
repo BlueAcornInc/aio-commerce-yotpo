@@ -27,7 +27,7 @@ class ConfigEncryptionHelper {
       encryptedPayload.encryptedData,
       this.encryptionKey,
       this.ivKey,
-      encryptedPayload.tag,
+      encryptedPayload.tag
     );
 
     // Return parsed JSON object
