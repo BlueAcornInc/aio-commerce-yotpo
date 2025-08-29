@@ -6,3 +6,9 @@
 .yotpo.bottomLine {
   margin: 10px 0;
 }
+
+ .main-reviews  .yotpo-filters-container {
+  width: 100%;
+  display: flex;
+  margin: 40px 0 10px 0;
+}

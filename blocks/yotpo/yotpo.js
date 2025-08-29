@@ -9,8 +9,10 @@ export default async function decorate(block) {
     });
 
     if (status !== "off") {
+
+      yotpoReviewsEl.classList.add("main-reviews");
       block.appendChild(yotpoReviewsEl);
-      window.yotpoWidgetsContainer.initWidgets();
+
 
       // Add review stars under pdp-header__title
       const titleElement = document.querySelector("div.pdp-header__title");
