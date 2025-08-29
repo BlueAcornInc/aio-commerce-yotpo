@@ -23,6 +23,7 @@ module.exports = {
     // General rules that apply to both environments
     "no-console": "warn",
     "no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
+    "prettier/prettier": ["error", { singleQuote: false }], // Enforce double quotes for this repo
     // You can add specific ESLint rules here that Prettier doesn't handle.
     // For example, if you want to ensure specific naming conventions for variables, etc.
     // 'curly': 'error', // Example: Enforce curly braces for all control statements

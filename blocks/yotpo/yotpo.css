@@ -1,3 +1,8 @@
+.yotpo-widget-instance,
 .yotpo-base-layout {
-  width: 100%;
+  width: 100% !important;
+}
+
+.yotpo.bottomLine {
+  margin: 10px 0;
 }

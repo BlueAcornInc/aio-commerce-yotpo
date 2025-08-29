@@ -10,6 +10,30 @@ export default async function decorate(block) {
 
     if (status !== "off") {
       block.appendChild(yotpoReviewsEl);
+      window.yotpoWidgetsContainer.initWidgets();
+
+      // Add review stars under pdp-header__title
+      const titleElement = document.querySelector("div.pdp-header__title");
+      if (titleElement) {
+        const reviewStarsEl = document.createElement("div");
+        const productId =
+          configs.find((c) => c.attr === "data-yotpo-product-id")?.value || "";
+        const instanceId =
+          configs.find((c) => c.attr === "data-yotpo-instance-id")?.value || "";
+
+        reviewStarsEl.setAttribute("data-yotpo-product-id", productId);
+        reviewStarsEl.setAttribute("data-yotpo-instance-id", instanceId);
+        reviewStarsEl.setAttribute("class", "yotpo bottomLine");
+        reviewStarsEl.setAttribute("data-product-id", productId);
+        reviewStarsEl.setAttribute("data-url", window.location.href);
+
+        // Insert after the title element
+        titleElement.parentNode.insertBefore(
+          reviewStarsEl,
+          titleElement.nextSibling,
+        );
+      }
+
       if (
         window.yotpoWidgetsContainer &&
         typeof window.yotpoWidgetsContainer.initWidgets === "function"

@@ -41,7 +41,8 @@
     "format:fix": "npm run format:check -- --write",
     "code:check": "npm run format:check && npm run lint:check",
     "code:fix": "npm run format:fix && npm run lint:fix",
-    "prepare": "husky"
+    "prepare": "husky",
+    "fix-all": "npm run format:fix && npm run lint:fix"
   },
   "engines": {
     "node": "^14.18 || ^16.13 || >=18"
