@@ -2,6 +2,102 @@ import { getConfigValue } from "../../scripts/configs.js";
 import { loadScript } from "../../scripts/aem.js";
 
 export default async function decorate(block) {
+  // Utilities for product card star injection
+  const extractSkuFromHref = (href) => {
+    try {
+      const url = new URL(href, window.location.origin);
+      const qpSku =
+        url.searchParams.get("sku") ||
+        url.searchParams.get("productId") ||
+        url.searchParams.get("id");
+      if (qpSku) return qpSku;
+      const parts = url.pathname.split("/").filter(Boolean);
+      return parts[parts.length - 1] || null;
+    } catch (e) {
+      return null;
+    }
+  };
+
+  const createBottomLineEl = (productId, productUrl) => {
+    const el = document.createElement("div");
+    el.className = "yotpo bottomLine";
+    el.setAttribute("data-product-id", productId || "");
+    el.setAttribute("data-url", productUrl || "");
+    return el;
+  };
+
+  const waitForYotpoReady = (timeoutMs = 8000, intervalMs = 150) =>
+    new Promise((resolve) => {
+      const start = Date.now();
+      const check = () => {
+        if (window.yotpo && typeof window.yotpo.refreshWidgets === "function") {
+          return resolve(true);
+        }
+        if (Date.now() - start >= timeoutMs) {
+          return resolve(false);
+        }
+        setTimeout(check, intervalMs);
+        return undefined;
+      };
+      check();
+    });
+
+  const scheduleClassicRefresh = () => {
+    const doRefresh = () => {
+      try {
+        window.yotpo.refreshWidgets();
+      } catch (e) {
+        // ignore
+      }
+    };
+    if (window.yotpo && typeof window.yotpo.refreshWidgets === "function") {
+      setTimeout(doRefresh, 200);
+    } else {
+      waitForYotpoReady().then((ready) => {
+        if (ready) setTimeout(doRefresh, 200);
+      });
+    }
+  };
+
+  const addStarsToProductCards = (instanceId, status) => {
+    if (status === "off") return;
+
+    // Find all product cards on the page
+    const productCards = document.querySelectorAll(".product-card");
+
+    productCards.forEach((card) => {
+      // Find the product link in the card
+      const productLink = card.querySelector('a[href*="/products/"]');
+      if (!productLink) return;
+
+      // Extract product ID from the link
+      const productId = extractSkuFromHref(productLink.href);
+      if (!productId) return;
+
+      // Check if stars already exist for this product
+      const existingStars = card.querySelector(
+        `.yotpo.bottomLine[data-product-id="${productId}"]`,
+      );
+      if (existingStars) return;
+
+      // Find the best place to insert stars (in product-card-content, after product-name)
+      const productContent = card.querySelector(".product-card-content");
+      const productName = card.querySelector(".product-name");
+
+      if (productContent && productName) {
+        // Create star element
+        const cleanUrl = `${window.location.origin}${new URL(productLink.href).pathname}`;
+        const starsEl = createBottomLineEl(productId, cleanUrl);
+
+        // Insert stars after product name
+        productName.parentNode.insertBefore(starsEl, productName.nextSibling);
+      }
+    });
+
+    // Refresh Yotpo widgets to render the new stars
+    scheduleClassicRefresh();
+  };
+
   const buildBlock = (configs, status) => {
     const yotpoReviewsEl = document.createElement("div");
     configs?.forEach((config) => {
@@ -9,10 +105,8 @@ export default async function decorate(block) {
     });
 
     if (status !== "off") {
-
       yotpoReviewsEl.classList.add("main-reviews");
       block.appendChild(yotpoReviewsEl);
-
 
       // Add review stars under pdp-header__title
       const titleElement = document.querySelector("div.pdp-header__title");
@@ -36,16 +130,51 @@ export default async function decorate(block) {
         );
       }
 
+      // Add stars to product cards on the page
+      const instanceId = configs.find(
+        (c) => c.attr === "data-yotpo-instance-id",
+      )?.value;
+      if (instanceId) {
+        // Wait a bit for the page to fully load, then add stars to product cards
+        setTimeout(() => {
+          addStarsToProductCards(instanceId, status);
+        }, 1000);
+
+        // Also observe for dynamically loaded product cards
+        const observer = new MutationObserver((mutations) => {
+          let hasNewCards = false;
+          mutations.forEach((mutation) => {
+            mutation.addedNodes.forEach((node) => {
+              if (
+                node.nodeType === 1 &&
+                (node.classList?.contains("product-card") ||
+                  node.querySelector?.(".product-card"))
+              ) {
+                hasNewCards = true;
+              }
+            });
+          });
+
+          if (hasNewCards) {
+            setTimeout(() => {
+              addStarsToProductCards(instanceId, status);
+            }, 500);
+          }
+        });
+
+        observer.observe(document.body, { childList: true, subtree: true });
+      }
+
       if (
         window.yotpoWidgetsContainer &&
         typeof window.yotpoWidgetsContainer.initWidgets === "function"
       ) {
         window.yotpoWidgetsContainer.initWidgets();
       } else {
-        console.warn("yotpoWidgetsContainer.initWidgets is not available");
+        console.debug("yotpoWidgetsContainer.initWidgets is not available");
       }
     } else {
-      console.log(
+      console.debug(
         "Yotpo widget status is off, skipping block append and widget init.",
       );
     }
@@ -85,6 +214,16 @@ export default async function decorate(block) {
     loadScript(loaderScriptUrl);
   };
 
+  const ensureClassicLoader = async (appKey) => {
+    try {
+      const url = `https://staticw2.yotpo.com/${appKey}/widget.js`;
+      await loadScript(url);
+      await waitForYotpoReady();
+    } catch (e) {
+      console.debug("Failed to load Yotpo classic loader:", e);
+    }
+  };
+
   fetch(config?.endpoint)
     .then((response) => {
       if (!response.ok) {
@@ -92,18 +231,27 @@ export default async function decorate(block) {
       }
       return response.json();
     })
-    .then((data) => {
+    .then(async (data) => {
       config.data = data?.config;
       config.loaderScriptUrl = `${config?.baseUrl}/${data?.appKey}`;
+
       // Add instanceId to widgetConfig and then buildBlock
       widgetConfig.unshift({
         attr: "data-yotpo-instance-id",
         value: data?.instanceId,
       });
+
+      // Load both the new widget loader and classic loader for star ratings
       addLoaderScript(config);
+
+      // Also load classic loader for product card stars
+      if (data?.appKey) {
+        await ensureClassicLoader(data?.appKey);
+      }
+
       buildBlock(widgetConfig, data?.status);
-      console.log("Yotpo config data:", data);
-      console.log("Updated widgetConfig:", JSON.stringify(widgetConfig));
+      console.debug("Yotpo config data:", data);
+      console.debug("Updated widgetConfig:", JSON.stringify(widgetConfig));
     })
     .catch((error) => {
       console.error("Fetch error:", error);

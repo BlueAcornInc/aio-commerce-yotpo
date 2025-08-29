@@ -7,8 +7,37 @@
   margin: 10px 0;
 }
 
- .main-reviews  .yotpo-filters-container {
+.main-reviews .yotpo-filters-container {
   width: 100%;
   display: flex;
   margin: 40px 0 10px 0;
+}
+
+.yotpo-widget-instance,
+.yotpo-base-layout {
+  width: 100% !important;
+}
+
+.yotpo.bottomLine {
+  margin: 10px 0;
+}
+
+/* Product card specific styles */
+.product-card .yotpo.bottomLine {
+  margin: 8px 0 4px 0;
+  font-size: 14px;
+}
+
+.product-card .yotpo.bottomLine .yotpo-stars {
+  display: inline-block;
+}
+
+.product-card .yotpo.bottomLine .text-m {
+  font-size: 12px;
+  color: #666;
+  margin-left: 4px;
+}
+
+.yotpo-filters-container-inner {
+  padding-top: 40px;
 }
