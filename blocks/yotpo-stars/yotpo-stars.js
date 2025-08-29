@@ -14,6 +14,8 @@ export default async function decorate(block) {
   let lastRefreshAt = 0;
   let didInitialRefresh = false;
   let observerTimer = null;
+  let retryCount = 0;
+  const maxRetries = 5;
 
   // Utilities
   const waitForYotpoReady = (timeoutMs = 8000, intervalMs = 150) =>
@@ -146,6 +148,8 @@ export default async function decorate(block) {
       target = tile.querySelector(
         ".ds-sdk-product-card__info, .product-info, .product-content",
       );
+    // For cart page and other product cards, look for product-card-content
+    if (!target) target = tile.querySelector(".product-card-content");
     // Last resort: use tile itself but guard against footer/header
     if (!target) target = tile;
     return target;
@@ -158,6 +162,7 @@ export default async function decorate(block) {
       ".ds-sdk-product-item__cta",
       ".product-actions",
       ".product-cta",
+      ".product-card-action",
       ".add-to-cart",
       '[data-testid="add-to-cart"]',
       'button[name="add-to-cart"]',
@@ -303,6 +308,25 @@ export default async function decorate(block) {
     if (alt.length) {
       return alt;
     }
+
+    // Look for cart cross-sell products specifically
+    const crossSell = Array.from(
+      document.querySelectorAll(
+        ".cart-cross-sell-products .product-card a[href*='/products/']",
+      ),
+    );
+    if (crossSell.length) {
+      return crossSell;
+    }
+
+    // Look for product cards (cart page, recommendations, etc.)
+    const productCards = Array.from(
+      document.querySelectorAll(".product-card a[href*='/products/']"),
+    );
+    if (productCards.length) {
+      return productCards;
+    }
+
     const fallback = Array.from(
       document.querySelectorAll('a[href*="/products/"]'),
     );
@@ -320,20 +344,52 @@ export default async function decorate(block) {
 
     const observer = new MutationObserver((mutations) => {
       let needsProcess = false;
+      let hasCarouselInit = false;
+
       for (const m of mutations) {
         if (m.addedNodes && m.addedNodes.length) {
           needsProcess = true;
-          break;
+          // Check if any added nodes contain product cards
+          for (const node of m.addedNodes) {
+            if (node.nodeType === Node.ELEMENT_NODE) {
+              if (
+                node.querySelector?.(".product-card") ||
+                node.classList?.contains("product-card")
+              ) {
+                needsProcess = true;
+                break;
+              }
+            }
+          }
+        }
+
+        // Check for attribute changes that indicate carousel initialization
+        if (
+          m.type === "attributes" &&
+          m.attributeName === "data-carousel-initialized"
+        ) {
+          hasCarouselInit = true;
+          needsProcess = true;
         }
       }
+
       if (!needsProcess) return;
       if (observerTimer) clearTimeout(observerTimer);
+
+      // Use shorter delay for carousel initialization
+      const delay = hasCarouselInit ? 100 : 250;
       observerTimer = setTimeout(() => {
         const anchors = collectProductAnchors(target);
         injectForAnchors(anchors, instanceId, status, variant);
-      }, 250);
+      }, delay);
     });
-    observer.observe(target, { childList: true, subtree: true });
+
+    observer.observe(target, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ["data-carousel-initialized", "data-initialized"],
+    });
   };
 
   // Fetch Yotpo config and wire up PLP injection
@@ -345,27 +401,107 @@ export default async function decorate(block) {
     cfg.data = data?.config;
     cfg.loaderScriptUrl = `${cfg.baseUrl}/${data?.appKey}`;
 
-    // Determine if PLP and choose appropriate loader
+    // Determine if this is a page with product cards and choose appropriate loader
     const plpAnchors = collectProductAnchors(document);
-    const isPLP =
+    const hasProductCards =
       !!document.querySelector(".ds-sdk-product-item") ||
       !!document.querySelector(".ds-widgets_results") ||
-      !!document.querySelector(".product-list-page-container");
+      !!document.querySelector(".product-list-page-container") ||
+      !!document.querySelector(".product-card") ||
+      !!document.querySelector(".cart-cross-sell-products");
 
-    if (plpAnchors.length || isPLP) {
+    if (plpAnchors.length || hasProductCards) {
       await ensureClassicLoader(data?.appKey);
     } else {
       await ensureLoader(cfg.loaderScriptUrl);
     }
+
+    // Add specific listener for carousel initialization
+    const watchForCarousels = () => {
+      // Look for existing carousels that are already initialized
+      const existingCarousels = document.querySelectorAll(
+        '[data-carousel-initialized="true"]',
+      );
+      if (existingCarousels.length > 0) {
+        setTimeout(() => {
+          const anchors = collectProductAnchors(document);
+          if (anchors.length > 0) {
+            injectForAnchors(
+              anchors,
+              data?.instanceId,
+              data?.status,
+              "classic",
+            );
+          }
+        }, 100);
+      }
+
+      // Watch for new carousels being initialized
+      const carouselObserver = new MutationObserver((mutations) => {
+        for (const mutation of mutations) {
+          if (
+            mutation.type === "attributes" &&
+            mutation.attributeName === "data-carousel-initialized" &&
+            mutation.target.getAttribute("data-carousel-initialized") === "true"
+          ) {
+            setTimeout(() => {
+              const anchors = collectProductAnchors(document);
+              if (anchors.length > 0) {
+                injectForAnchors(
+                  anchors,
+                  data?.instanceId,
+                  data?.status,
+                  "classic",
+                );
+              }
+            }, 100);
+          }
+        }
+      });
+
+      carouselObserver.observe(document.body, {
+        attributes: true,
+        subtree: true,
+        attributeFilter: ["data-carousel-initialized"],
+      });
+    };
+
+    // Retry mechanism for delayed content
+    const retryProductCardInjection = () => {
+      if (retryCount >= maxRetries) return;
+
+      setTimeout(
+        () => {
+          const anchors = collectProductAnchors(document);
+          if (anchors.length > 0) {
+            injectForAnchors(
+              anchors,
+              data?.instanceId,
+              data?.status,
+              "classic",
+            );
+          } else {
+            retryCount++;
+            retryProductCardInjection();
+          }
+        },
+        500 * (retryCount + 1),
+      ); // Exponential backoff
+    };
+
     if (plpAnchors.length) {
-      // PLP mode: inject a widget container per product tile
+      // Product cards mode: inject a widget container per product tile
 
       injectForAnchors(plpAnchors, data?.instanceId, data?.status, "classic");
       enableObserver(data?.instanceId, data?.status, "classic");
-    } else if (isPLP) {
-      // PLP page but content may not be mounted yet; set observer and wait
+      watchForCarousels();
+    } else if (hasProductCards) {
+      // Page with product cards but content may not be mounted yet; set observer and wait
 
       enableObserver(data?.instanceId, data?.status, "classic");
+      watchForCarousels();
+      // Start retry mechanism for delayed content
+      retryProductCardInjection();
     } else {
       // Fallback: PDP mode (single widget in this block)
 
