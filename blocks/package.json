@@ -1,0 +1,33 @@
+{
+  "name": "@blueacorninc/storefront-yotpo",
+  "version": "1.0.0",
+  "description": "Yotpo reviews + review-stars blocks for Adobe Commerce Storefront",
+  "main": "index.js",
+  "scripts": {
+    "postinstall": "node postinstall.js"
+  },
+  "keywords": [
+    "adobe-commerce",
+    "eds",
+    "storefront",
+    "yotpo",
+    "reviews",
+    "blocks"
+  ],
+  "author": "Blue Acorn",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BlueAcornInc/aio-commerce-yotpo.git",
+    "directory": "blocks"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
+  "files": [
+    "yotpo/**/*",
+    "yotpo-stars/**/*",
+    "postinstall.js",
+    "README.md"
+  ]
+}

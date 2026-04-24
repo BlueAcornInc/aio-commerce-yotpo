@@ -1,0 +1,106 @@
+name: Publish Yotpo Blocks to GitHub Packages
+
+# GitHub Packages-only publish (no npmjs.com) because the package is
+# BA-internal. Mirrors aio-commerce-storelocator's workflow minus the
+# public registry half.
+
+on:
+  # `release: published` fires when a GitHub Release is created. This is
+  # the normal path: operator tags in the UI, creates a release, workflow
+  # publishes the version already pinned in blocks/package.json.
+  release:
+    types: [published]
+
+  # Manual trigger with version-bump for quick patches without cutting
+  # a Release. Bumps blocks/package.json, publishes, tags it.
+  workflow_dispatch:
+    inputs:
+      version_bump:
+        description: "Version bump type"
+        required: true
+        default: "patch"
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      # GITHUB_TOKEN needs packages:write to push to npm.pkg.github.com;
+      # contents:write so the manual-bump path can commit + tag.
+      contents: write
+      packages: write
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          registry-url: "https://npm.pkg.github.com/"
+          scope: "@blueacorninc"
+
+      - name: Install dependencies
+        working-directory: ./blocks
+        # --ignore-scripts so the package's own postinstall (which copies
+        # blocks into a consuming repo's blocks/ dir) doesn't run here —
+        # this is the SOURCE repo, not a consumer.
+        run: npm install --ignore-scripts
+
+      - name: Bump version (if manual trigger)
+        if: github.event_name == 'workflow_dispatch'
+        working-directory: ./blocks
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          npm version ${{ github.event.inputs.version_bump }} --no-git-tag-version
+          echo "VERSION=$(npm pkg get version | tr -d '\"')" >> $GITHUB_ENV
+
+      - name: Read version from package.json (release trigger)
+        if: github.event_name != 'workflow_dispatch'
+        working-directory: ./blocks
+        run: echo "VERSION=$(npm pkg get version | tr -d '\"')" >> $GITHUB_ENV
+
+      - name: Skip if version already published
+        working-directory: ./blocks
+        run: |
+          if npm view @blueacorninc/storefront-yotpo@$VERSION \
+               --registry=https://npm.pkg.github.com/ > /dev/null 2>&1; then
+            echo "Version $VERSION already exists on GitHub Packages. Skipping."
+            echo "SKIP_PUBLISH=true" >> $GITHUB_ENV
+          else
+            echo "Version $VERSION not yet published. Proceeding."
+            echo "SKIP_PUBLISH=false" >> $GITHUB_ENV
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish to GitHub Packages
+        if: env.SKIP_PUBLISH == 'false'
+        working-directory: ./blocks
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Git tag (manual trigger + actually published)
+        if: github.event_name == 'workflow_dispatch' && env.SKIP_PUBLISH == 'false'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git tag "blocks-v${{ env.VERSION }}"
+          git push origin "blocks-v${{ env.VERSION }}"
+
+      - name: Output result
+        run: |
+          if [ "$SKIP_PUBLISH" == "true" ]; then
+            echo "✅ Version $VERSION already published — no-op"
+          else
+            echo "🎉 Published @blueacorninc/storefront-yotpo@$VERSION to GitHub Packages"
+            echo "📦 https://github.com/BlueAcornInc/aio-commerce-yotpo/packages"
+          fi
