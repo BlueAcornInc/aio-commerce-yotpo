@@ -53,19 +53,30 @@ jobs:
         # this is the SOURCE repo, not a consumer.
         run: npm install --ignore-scripts
 
-      - name: Bump version (if manual trigger)
+      # Single source of truth for the version: the REPO ROOT package.json
+      # (the AIO app's version). Blocks always publish at the same version.
+      # That keeps @blueacorninc/storefront-yotpo@X.Y.Z and aio-commerce-yotpo
+      # app vX.Y.Z aligned — the frontend blocks and backend app move
+      # together, with no drift between them.
+      #
+      # Manual bump: bumps the root package.json (not blocks/), commits + tags
+      # at the root, then blocks picks up the new version in the sync step.
+      # Release trigger: just syncs from the current root version.
+      - name: Bump root version (manual trigger)
         if: github.event_name == 'workflow_dispatch'
-        working-directory: ./blocks
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           npm version ${{ github.event.inputs.version_bump }} --no-git-tag-version
-          echo "VERSION=$(npm pkg get version | tr -d '\"')" >> $GITHUB_ENV
+          echo "Bumped root package.json → $(node -p 'require(\"./package.json\").version')"
 
-      - name: Read version from package.json (release trigger)
-        if: github.event_name != 'workflow_dispatch'
+      - name: Sync blocks version from root package.json
         working-directory: ./blocks
-        run: echo "VERSION=$(npm pkg get version | tr -d '\"')" >> $GITHUB_ENV
+        run: |
+          ROOT_VERSION=$(node -p 'require("../package.json").version')
+          npm pkg set version="$ROOT_VERSION"
+          echo "Synced blocks version → $ROOT_VERSION (from root package.json)"
+          echo "VERSION=$ROOT_VERSION" >> $GITHUB_ENV
 
       - name: Skip if version already published
         working-directory: ./blocks
@@ -88,13 +99,20 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Create Git tag (manual trigger + actually published)
+      - name: Commit + tag root version (manual trigger + actually published)
+        # Manual bumps mutated root package.json in memory; commit that change
+        # back to main and tag at `v${VERSION}` so the repo reflects reality.
+        # Release-trigger runs skip this — the release already has its own tag
+        # and the root package.json was bumped externally before the release.
         if: github.event_name == 'workflow_dispatch' && env.SKIP_PUBLISH == 'false'
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git tag "blocks-v${{ env.VERSION }}"
-          git push origin "blocks-v${{ env.VERSION }}"
+          git add package.json blocks/package.json
+          git commit -m "chore(release): v${VERSION}" || true
+          git tag "v${VERSION}"
+          git push origin HEAD:${{ github.ref_name }}
+          git push origin "v${VERSION}"
 
       - name: Output result
         run: |
