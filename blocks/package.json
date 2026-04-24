@@ -1,6 +1,6 @@
 {
   "name": "@blueacorninc/storefront-yotpo",
-  "version": "1.0.0",
+  "version": "1.0.6",
   "description": "Yotpo reviews + review-stars blocks for Adobe Commerce Storefront",
   "main": "index.js",
   "scripts": {
