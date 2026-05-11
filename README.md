@@ -1,6 +1,6 @@
 # Yotpo by Blue Acorn
 
-This Adobe App Builder extension provides a secure and efficient way for Adobe Commerce merchants to store and consume their Yotpo credentials. All configurations, including sensitive credentials, are managed directly within the Adobe lib-state backend and stored securily encrypted on lib-file backend for persistence. The App Builder application securely retrieves these settings and makes them available to your storefront via API, enabling the display of user-generated content and integration with Yotpo services.
+This Adobe App Builder extension provides a secure and efficient way for Adobe Commerce merchants to store and consume their Yotpo credentials. All configurations, including sensitive credentials, are managed directly within the Adobe lib-state backend and stored securely encrypted on lib-file backend for persistence. The App Builder application securely retrieves these settings and makes them available to your storefront via API, enabling the display of user-generated content and integration with Yotpo services.
 
 ## Table of Contents
 
@@ -124,7 +124,7 @@ All Yotpo-specific configurations for this extension are managed by the merchant
 
 These environment variables are crucial for the **operational functioning and security of the Adobe App Builder application itself**. These are **not** the Yotpo-specific settings for your store, which are configured in the Adobe Commerce Admin.
 
-For **local development**, these are typically set in your `.env` file within your App Builder project. For **deployed environments via CI/CD**, these variables are configured directly within the Adobe Developer Console UI for your specific App Builder workspace/action.
+For **local development**, copy `env.dist` to `.env` in the root of the project and fill in the values. For **deployed environments via CI/CD**, these variables are configured directly within the Adobe Developer Console UI for your specific App Builder workspace/action.
 
 - `ENCRYPTION_KEY`
   - **Description:** A 32-byte (64-character hexadecimal string) key used by the App Builder application for internal encryption operations.
@@ -155,11 +155,11 @@ For **local development**, these are typically set in your `.env` file within yo
 
 Once the App Builder application is deployed and its settings are configured in the Adobe Commerce backend, your Adobe Commerce frontend can consume the Yotpo configuration through the App Builder API endpoint.
 
-**Adobe Commerce Storefont and Edge Delivery Services Blocks**
+**Adobe Commerce Storefront and Edge Delivery Services Blocks**
 
 Refer to the EDS and Storefront Blocks Setup Instructions to set this up in Adobe Commerce Storefront and Edge Delivery Services:
 
-[**`EDS.md`**](https://www.google.com/search?q=EDS.md)
+[**`EDS.md`**](EDS.md)
 
 **Example Frontend API Call (Conceptual):**
 
@@ -213,7 +213,7 @@ For any issues, questions, or feature requests, please refer to the following:
 
 ## Contributing
 
-We welcome contributions\! If you'd like to contribute to this project, please follow these steps:
+We welcome contributions! If you'd like to contribute to this project, please follow these steps:
 
 1.  Fork the repository.
 2.  Create a new branch for your feature or bug fix.
