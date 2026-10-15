@@ -65,7 +65,7 @@ function installBlocks() {
   if (!projectRoot) {
     console.error("Error: Could not find a blocks/ directory in the project");
     console.error(
-      "Please ensure you are installing this package in a project that has a blocks/ directory"
+      "Please ensure you are installing this package in a project that has a blocks/ directory",
     );
     process.exit(1);
   }
@@ -99,10 +99,10 @@ function installBlocks() {
 
         if (fs.existsSync(targetPath)) {
           console.log(
-            `Warning: Block '${entry.name}' already exists. Skipping...`
+            `Warning: Block '${entry.name}' already exists. Skipping...`,
           );
           console.log(
-            `If you want to update, please remove the existing block first.`
+            `If you want to update, please remove the existing block first.`,
           );
           continue;
         }

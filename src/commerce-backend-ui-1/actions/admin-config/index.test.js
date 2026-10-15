@@ -45,7 +45,7 @@ describe("Admin Main Action", () => {
 
   // --- POST Request Tests ---
   describe("POST requests", () => {
-    test("should return 400 if required fields are missing in payload", async () => {
+    test("should return 400 listing only the missing field names", async () => {
       const params = {
         __ow_method: "post",
         payload: {
@@ -60,10 +60,33 @@ describe("Admin Main Action", () => {
       const body = JSON.parse(response.body);
       expect(body.error).toContain("Missing required fields");
       expect(body.error).toContain("instanceId");
-      expect(mockLogger.error).toHaveBeenCalledWith(
-        "Missing field for request",
-        params,
+      expect(mockLogger.warn).toHaveBeenCalledWith(
+        "Missing required fields: status, instanceId",
       );
+    });
+
+    test("should never echo or log action params on a bad request", async () => {
+      // Distinctive marker values, so a leak anywhere is easy to detect.
+      const marker = (name) => `${name}-must-not-leak`;
+      const params = {
+        __ow_method: "post",
+        __ow_headers: { authorization: `Bearer ${marker("ims")}` },
+        ENCRYPTION_KEY: marker("key"),
+        ENCRYPTION_IV: marker("iv"),
+        payload: { apiSecret: marker("secret") },
+      };
+
+      const response = await main(params);
+
+      expect(response.statusCode).toBe(400);
+      const logged = JSON.stringify(
+        Object.values(mockLogger).flatMap((fn) => fn.mock.calls),
+      );
+      ["ims", "key", "iv", "secret"].map(marker).forEach((value) => {
+        expect(response.body).not.toContain(value);
+        expect(logged).not.toContain(value);
+      });
+      expect(JSON.parse(response.body).receivedParams).toBeUndefined();
     });
 
     test("should successfully save configuration and return 200", async () => {
@@ -85,16 +108,78 @@ describe("Admin Main Action", () => {
 
       expect(response.statusCode).toBe(200);
       expect(response.headers["Content-Type"]).toBe("application/json");
+      expect(response.body).not.toContain("THISISVERYSECRET");
       const body = JSON.parse(response.body);
       expect(body.success).toBe(true);
       expect(body.message).toBe("Saved Yotpo config");
-      expect(body.savedConfig).toEqual(mockPayload);
+      expect(body.savedConfig).toEqual({
+        appKey: "somekey",
+        status: "enabled",
+        instanceId: "test-instance-123",
+        hasApiSecret: true,
+      });
       expect(mockWriteConfiguration).toHaveBeenCalledWith(
         mockPayload,
         "yotpo",
         params,
       );
       expect(mockLogger.error).not.toHaveBeenCalled();
+    });
+
+    test("should keep the stored API secret when the payload leaves it blank", async () => {
+      const params = {
+        __ow_method: "post",
+        payload: {
+          appKey: "somekey",
+          apiSecret: "",
+          status: "enabled",
+          instanceId: "test-instance-123",
+        },
+      };
+      mockReadConfiguration.mockResolvedValueOnce({
+        appKey: "oldkey",
+        apiSecret: "STORED-SECRET",
+        status: "enabled",
+        instanceId: "old-instance",
+      });
+      mockWriteConfiguration.mockResolvedValueOnce();
+
+      const response = await main(params);
+
+      expect(response.statusCode).toBe(200);
+      expect(response.body).not.toContain("STORED-SECRET");
+      expect(mockWriteConfiguration).toHaveBeenCalledWith(
+        {
+          appKey: "somekey",
+          apiSecret: "STORED-SECRET",
+          status: "enabled",
+          instanceId: "test-instance-123",
+        },
+        "yotpo",
+        params,
+      );
+    });
+
+    test("should save without a secret when none is stored yet", async () => {
+      const params = {
+        __ow_method: "post",
+        payload: {
+          appKey: "somekey",
+          status: "enabled",
+          instanceId: "test-instance-123",
+        },
+      };
+      mockReadConfiguration.mockRejectedValueOnce(
+        Object.assign(new Error("not found"), {
+          code: "ERROR_FILE_NOT_EXISTS",
+        }),
+      );
+      mockWriteConfiguration.mockResolvedValueOnce();
+
+      const response = await main(params);
+
+      expect(response.statusCode).toBe(200);
+      expect(JSON.parse(response.body).savedConfig.hasApiSecret).toBe(false);
     });
 
     test("should return 500 if writeConfiguration fails", async () => {
@@ -147,7 +232,13 @@ describe("Admin Main Action", () => {
       const body = JSON.parse(response.body);
       expect(body.success).toBe(true);
       expect(body.message).toBe("Loaded Yotpo config");
-      expect(body.config).toEqual(mockLoadedConfig);
+      expect(response.body).not.toContain("THISISVERYSECRET");
+      expect(body.config).toEqual({
+        appKey: "somekey",
+        status: "enabled",
+        instanceId: "test-instance-123",
+        hasApiSecret: true,
+      });
       expect(mockReadConfiguration).toHaveBeenCalledWith(params, "yotpo");
       expect(mockLogger.error).not.toHaveBeenCalled();
     });
