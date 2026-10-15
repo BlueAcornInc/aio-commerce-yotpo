@@ -1,0 +1,76 @@
+[
+  {
+    "default": "off",
+    "description": "Turn the Yotpo storefront widgets on or off",
+    "label": "Status",
+    "name": "status",
+    "options": [
+      {
+        "label": "On",
+        "value": "on"
+      },
+      {
+        "label": "Off",
+        "value": "off"
+      }
+    ],
+    "selectionMode": "single",
+    "type": "list"
+  },
+  {
+    "default": "",
+    "description": "Your Yotpo store ID (app key), from Yotpo > Settings > Store. Public by design.",
+    "label": "App Key",
+    "name": "appKey",
+    "type": "text"
+  },
+  {
+    "default": "",
+    "description": "Optional. The Yotpo star ratings widget instance ID. The reviews and Q&A widgets are found automatically.",
+    "label": "Widget Instance ID",
+    "name": "instanceId",
+    "type": "text"
+  },
+  {
+    "default": true,
+    "description": "Show the reviews widget on product pages.",
+    "label": "Reviews widget",
+    "name": "showReviews",
+    "type": "boolean"
+  },
+  {
+    "default": true,
+    "description": "Show the star rating and review count by the product title.",
+    "label": "Star summary",
+    "name": "showStarSummary",
+    "type": "boolean"
+  },
+  {
+    "default": true,
+    "description": "Show Yotpo Q&A on product pages (as a tab or below the reviews).",
+    "label": "Questions and answers",
+    "name": "showQna",
+    "type": "boolean"
+  },
+  {
+    "default": true,
+    "description": "Show star ratings on product tiles in listings, search and recommendations.",
+    "label": "Stars on product listings",
+    "name": "showInlineStars",
+    "type": "boolean"
+  },
+  {
+    "default": false,
+    "description": "Show star ratings on cart, mini-cart and cross-sell product tiles.",
+    "label": "Stars in the cart",
+    "name": "showCartStars",
+    "type": "boolean"
+  },
+  {
+    "default": false,
+    "description": "Send order confirmations to Yotpo for conversion tracking. Not available yet.",
+    "label": "Conversion tracking",
+    "name": "trackConversions",
+    "type": "boolean"
+  }
+]

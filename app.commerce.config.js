@@ -1,0 +1,113 @@
+/*
+ * Copyright 2024 Adobe. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
+/**
+ * App Management configuration for Yotpo.
+ *
+ * Merchants configure these values in Commerce Admin (Apps > App Management),
+ * per website, store or store view. A brand is a store view: values set at a
+ * higher scope are inherited.
+ *
+ * Every field here is public: the storefront needs the app key to load the
+ * Yotpo widgets. The app stores no secrets.
+ *
+ * @see https://developer.adobe.com/commerce/extensibility/app-management/
+ */
+import { defineConfig } from "@adobe/aio-commerce-lib-app/config";
+
+export default defineConfig({
+  metadata: {
+    id: "yotpo",
+    displayName: "Yotpo",
+    description:
+      "Yotpo reviews, star ratings and Q&A for Adobe Commerce storefronts on Edge Delivery Services",
+    version: "2.0.0",
+  },
+  businessConfig: {
+    schema: [
+      {
+        name: "status",
+        type: "list",
+        label: "Status",
+        description: "Turn the Yotpo storefront widgets on or off",
+        selectionMode: "single",
+        options: [
+          { label: "On", value: "on" },
+          { label: "Off", value: "off" },
+        ],
+        default: "off",
+      },
+      {
+        name: "appKey",
+        type: "text",
+        label: "App Key",
+        description:
+          "Your Yotpo store ID (app key), from Yotpo > Settings > Store. Public by design.",
+        requiredIf: { field: "status", value: "on" },
+      },
+      {
+        name: "instanceId",
+        type: "text",
+        label: "Widget Instance ID",
+        description:
+          "Optional. The Yotpo star ratings widget instance ID. The reviews and Q&A widgets are found automatically.",
+      },
+      {
+        name: "showReviews",
+        type: "boolean",
+        label: "Reviews widget",
+        description: "Show the reviews widget on product pages.",
+        default: true,
+      },
+      {
+        name: "showStarSummary",
+        type: "boolean",
+        label: "Star summary",
+        description:
+          "Show the star rating and review count by the product title.",
+        default: true,
+      },
+      {
+        name: "showQna",
+        type: "boolean",
+        label: "Questions and answers",
+        description:
+          "Show Yotpo Q&A on product pages (as a tab or below the reviews).",
+        default: true,
+      },
+      {
+        name: "showInlineStars",
+        type: "boolean",
+        label: "Stars on product listings",
+        description:
+          "Show star ratings on product tiles in listings, search and recommendations.",
+        default: true,
+      },
+      {
+        name: "showCartStars",
+        type: "boolean",
+        label: "Stars in the cart",
+        description:
+          "Show star ratings on cart, mini-cart and cross-sell product tiles.",
+        default: false,
+      },
+      {
+        name: "trackConversions",
+        type: "boolean",
+        label: "Conversion tracking",
+        description:
+          "Send order confirmations to Yotpo for conversion tracking. Not available yet.",
+        default: false,
+      },
+    ],
+  },
+});

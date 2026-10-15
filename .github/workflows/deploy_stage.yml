@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - main
+      # Push a branch as stage/<name> to deploy it to the Stage workspace
+      # and test it before it merges.
+      - "stage/**"
+  workflow_dispatch:
 jobs:
   deploy:
     name: Deploy to Stage
@@ -42,8 +46,6 @@ jobs:
         env:
           AIO_RUNTIME_NAMESPACE: ${{ vars.AIO_RUNTIME_NAMESPACE_STAGE }}
           COMMERCE_ENDPOINT: ${{ vars.COMMERCE_ENDPOINT }}
-          ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
-          ENCRYPTION_IV: ${{ secrets.ENCRYPTION_IV }}
         uses: adobe/aio-apps-action@3.3.0
         with:
           os: ${{ matrix.os }}
@@ -63,4 +65,3 @@ jobs:
         with:
           os: ${{ matrix.os }}
           command: deploy
-          noPublish: true

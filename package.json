@@ -1,23 +1,11 @@
 {
   "name": "Yotpo by Blue Acorn",
-  "version": "1.0.8",
+  "version": "2.0.0",
   "private": true,
   "dependencies": {
-    "@adobe/aio-lib-files": "^4.1.2",
-    "@adobe/aio-lib-ims": "^8.1.0",
-    "@adobe/aio-lib-state": "^5.1.0",
-    "@adobe/aio-sdk": "^6.0.0",
-    "@adobe/exc-app": "^1.4.17",
-    "@adobe/react-spectrum": "^3.43.0",
-    "@adobe/uix-guest": "^0.8.3",
-    "core-js": "^3.45.0",
-    "jest": "^30.0.5",
-    "prettier": "^3.6.2",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1",
-    "react-error-boundary": "^5.0.0",
-    "react-router": "^7.7.1",
-    "regenerator-runtime": "^0.14.1"
+    "@adobe/aio-commerce-lib-app": "^1.11.0",
+    "@adobe/aio-commerce-lib-config": "^1.8.0",
+    "@adobe/aio-sdk": "^6.0.0"
   },
   "devDependencies": {
     "@adobe/eslint-config-aio-lib-config": "^4.0.0",
@@ -30,7 +18,9 @@
     "eslint-plugin-prettier": "^5.5.4",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
-    "husky": "^9.1.7"
+    "husky": "^9.1.7",
+    "jest": "^30.0.5",
+    "prettier": "^3.6.2"
   },
   "scripts": {
     "test": "jest --passWithNoTests ./src",
@@ -71,5 +61,8 @@
       "name": "Maxime Carey",
       "email": "maxime.carey@blueacornici.com"
     }
-  ]
+  ],
+  "imports": {
+    "#app.commerce.config": "./src/commerce-extensibility-1/.generated/app.commerce.config.js"
+  }
 }
