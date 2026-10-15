@@ -61,5 +61,8 @@
       "name": "Maxime Carey",
       "email": "maxime.carey@blueacornici.com"
     }
-  ]
+  ],
+  "imports": {
+    "#app.commerce.config": "./src/commerce-extensibility-1/.generated/app.commerce.config.js"
+  }
 }

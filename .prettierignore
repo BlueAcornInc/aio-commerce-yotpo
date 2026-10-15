@@ -1,0 +1,3 @@
+# Rewritten by @adobe/aio-commerce-lib-app on every build (pre-app-build hook).
+**/.generated/**
+package-lock.json

@@ -7,6 +7,8 @@ operations:
   workerProcess:
     - type: action
       impl: app-management/app-config
+    - type: action
+      impl: app-management/association
 
 runtimeManifest:
   packages:
@@ -21,5 +23,14 @@ runtimeManifest:
           inputs:
             LOG_LEVEL: $LOG_LEVEL
           annotations:
-            require-adobe-auth: true
             final: true
+            require-adobe-auth: true
+        association:
+          function: .generated/actions/app-management/association.js
+          web: yes
+          runtime: nodejs:24
+          inputs:
+            LOG_LEVEL: $LOG_LEVEL
+          annotations:
+            final: true
+            require-adobe-auth: true

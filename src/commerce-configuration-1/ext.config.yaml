@@ -24,8 +24,8 @@ runtimeManifest:
             LOG_LEVEL: $LOG_LEVEL
             AIO_COMMERCE_CONFIG_ENCRYPTION_KEY: $AIO_COMMERCE_CONFIG_ENCRYPTION_KEY
           annotations:
-            require-adobe-auth: true
             final: true
+            require-adobe-auth: true
         scope-tree:
           function: .generated/actions/app-management/scope-tree.js
           web: yes
@@ -33,5 +33,5 @@ runtimeManifest:
           inputs:
             LOG_LEVEL: $LOG_LEVEL
           annotations:
-            require-adobe-auth: true
             final: true
+            require-adobe-auth: true

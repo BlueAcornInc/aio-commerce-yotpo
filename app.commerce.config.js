@@ -22,9 +22,9 @@
  *
  * @see https://developer.adobe.com/commerce/extensibility/app-management/
  */
-const { defineConfig } = require("@adobe/aio-commerce-lib-app/config");
+import { defineConfig } from "@adobe/aio-commerce-lib-app/config";
 
-module.exports = defineConfig({
+export default defineConfig({
   metadata: {
     id: "yotpo",
     displayName: "Yotpo",

@@ -20,16 +20,14 @@
         "type": "list"
       },
       {
+        "default": "",
         "description": "Your Yotpo store ID (app key), from Yotpo > Settings > Store. Public by design.",
         "label": "App Key",
         "name": "appKey",
-        "requiredIf": {
-          "field": "status",
-          "value": "on"
-        },
         "type": "text"
       },
       {
+        "default": "",
         "description": "Optional. The Yotpo star ratings widget instance ID. The reviews and Q&A widgets are found automatically.",
         "label": "Widget Instance ID",
         "name": "instanceId",
