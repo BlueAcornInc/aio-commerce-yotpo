@@ -25,18 +25,45 @@ const json = (statusCode, body) => ({
 });
 
 /**
- * Read one public field for a store view.
+ * Read the public fields at one scope.
  *
- * @param {string} name Field name
- * @param {string} storeCode Store view code
- * @returns {Promise<string|undefined>} The resolved value
+ * @param {object} scope Scope selector from lib-config
+ * @returns {Promise<object>} Field values by name
  */
-async function readField(name, storeCode) {
-  const { config } = await getConfigurationByKey(
-    name,
-    byCodeAndLevel(storeCode, "store_view"),
+async function readFields(scope) {
+  const values = await Promise.all(
+    PUBLIC_FIELDS.map(async (name) => {
+      const { config } = await getConfigurationByKey(name, scope);
+      return config?.value;
+    }),
   );
-  return config?.value;
+  return Object.fromEntries(PUBLIC_FIELDS.map((name, i) => [name, values[i]]));
+}
+
+/**
+ * Read a store view's configuration. A store view the scope tree doesn't
+ * know yet (scopes sync when the app is installed, and new store views
+ * appear after the next sync) falls back to the global scope.
+ *
+ * @param {string} storeCode Store view code
+ * @returns {Promise<object>} Field values by name
+ */
+async function readConfig(storeCode) {
+  const scopes = [
+    byCodeAndLevel(storeCode, "store_view"),
+    byCodeAndLevel("global", "global"),
+  ];
+  for (const scope of scopes) {
+    try {
+      return await readFields(scope);
+    } catch (error) {
+      if (!/^INVALID_SCOPE/.test(error.message)) {
+        throw error;
+      }
+    }
+  }
+  // No scope tree yet: the app hasn't been installed and configured.
+  return {};
 }
 
 /**
@@ -56,12 +83,7 @@ async function main(params) {
   try {
     await initialize({ schema });
 
-    const values = await Promise.all(
-      PUBLIC_FIELDS.map((name) => readField(name, storeCode)),
-    );
-    const config = Object.fromEntries(
-      PUBLIC_FIELDS.map((name, i) => [name, values[i]]),
-    );
+    const config = await readConfig(storeCode);
 
     if (config.status !== "on" || !config.appKey) {
       return json(200, { status: "off" });

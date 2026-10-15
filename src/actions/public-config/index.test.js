@@ -75,6 +75,50 @@ describe("Yotpo public storefront config", () => {
     expect((await main({})).body).toEqual({ status: "off" });
   });
 
+  test("falls back to global when the store view isn't in the scope tree", async () => {
+    libConfig.getConfigurationByKey.mockImplementation(async (name, scope) => {
+      if (scope.level === "store_view") {
+        throw new Error(
+          "INVALID_SCOPE: Unknown scope code='default' level='store_view'",
+        );
+      }
+      return {
+        config: { name, value: { status: "on", appKey: "global-key" }[name] },
+      };
+    });
+
+    const response = await main({});
+
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toEqual({ status: "on", appKey: "global-key" });
+    expect(libConfig.byCodeAndLevel).toHaveBeenCalledWith("global", "global");
+  });
+
+  test("reports off when nothing is configured yet", async () => {
+    libConfig.getConfigurationByKey.mockImplementation(async (name, scope) => {
+      if (scope.level === "store_view") {
+        throw new Error("INVALID_SCOPE: Unknown scope");
+      }
+      return { config: { name, value: undefined } };
+    });
+
+    const response = await main({});
+
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toEqual({ status: "off" });
+  });
+
+  test("reports off before any scope tree exists", async () => {
+    libConfig.getConfigurationByKey.mockRejectedValue(
+      new Error("INVALID_SCOPE: Unknown scope code='global' level='global'"),
+    );
+
+    const response = await main({});
+
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toEqual({ status: "off" });
+  });
+
   test("rejects a malformed store code without reading config", async () => {
     const response = await main({ storeCode: "../../etc" });
 
