@@ -1,8 +1,8 @@
 {
   "name": "Yotpo",
   "displayName": "Yotpo",
-  "description": "Yotpo for Adobe Commerce",
+  "description": "Yotpo reviews, star ratings and Q&A for Adobe Commerce, configured through App Management",
   "platform": "web",
   "id": "Yotpo",
-  "version": "1.0.8"
+  "version": "2.0.0"
 }

@@ -1,6 +1,36 @@
-.yotpo-widget-instance,
-.yotpo-base-layout {
+.yotpo-widget-instance {
   width: 100% !important;
+}
+
+/* Space the Q&A widget away from the reviews widget above it — Yotpo does not
+   add its own margin between two stacked .yotpo-widget-instance nodes. */
+.yotpo-widget-instance.yotpo-qna {
+  margin-top: 40px;
+}
+
+/* Do NOT force .yotpo-base-layout to width:100%. Yotpo lays it out as a fixed
+   ~960px block (the native PDP renders it that way). Forcing 100% stretched it
+   to the full EDS block width, which spread the whole summary out and shifted
+   "Write A Review" far right. We keep Yotpo's own width but centre it: on EDS
+   Yotpo does not apply its usual margin:0 auto here, so without this the block
+   pins to the left. */
+.yotpo-widget-instance .yotpo-base-layout {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Insulate the native Yotpo widget from the EDS global box-sizing that would otherwise
+   cascade into this third-party markup. The original Magento PDP renders the widget on
+   Yotpo's intended content-box; EDS applies box-sizing: border-box, which distorts the score,
+   histogram bars and stars. No !important on box-sizing — Yotpo's own form controls (search
+   box, filter pills) keep their intentional border-box, matching the original.
+   Fonts are deliberately NOT overridden: the widget applies the font configured in the Yotpo
+   admin (Open Sans Light on both PaaS and staging), which is what the PaaS PDP renders. */
+.yotpo-widget-instance,
+.yotpo-widget-instance *,
+.yotpo-widget-instance *::before,
+.yotpo-widget-instance *::after {
+  box-sizing: content-box;
 }
 
 .yotpo.bottomLine {
@@ -10,21 +40,12 @@
 .main-reviews .yotpo-filters-container {
   width: 100%;
   display: flex;
-  margin: 40px 0 10px 0;
-}
-
-.yotpo-widget-instance,
-.yotpo-base-layout {
-  width: 100% !important;
-}
-
-.yotpo.bottomLine {
-  margin: 10px 0;
+  margin: 40px 0 10px;
 }
 
 /* Product card specific styles */
 .product-card .yotpo.bottomLine {
-  margin: 8px 0 4px 0;
+  margin: 8px 0 4px;
   font-size: 14px;
 }
 
@@ -40,4 +61,158 @@
 
 .yotpo-filters-container-inner {
   padding-top: 40px;
+}
+
+/* Override Yotpo default star fill (#e7721b orange) to match production gold.
+   The SVG linearGradient stop-color is set as a presentation attribute by the
+   Yotpo widget JS; CSS overrides presentation attributes at any specificity. */
+.yotpo-widget-instance .yotpo-sr-star-full stop:first-child,
+.yotpo-widget-instance .yotpo-sr-star-half stop:first-child {
+  stop-color: #b38a2b;
+}
+
+/* Match the empty/half star outline colour to production. The PaaS instance has
+   its star colour configured to gold (rgb(179,138,43)), so its empty stars get a
+   gold outline; the EDS instance falls back to Yotpo's default orange (#e7721b),
+   set as a `stroke` presentation attribute on the star path. CSS overrides that
+   attribute. Full stars have no stroke, so they are intentionally excluded. */
+.yotpo-widget-instance .yotpo-sr-star-empty path,
+.yotpo-widget-instance .yotpo-sr-star-half path {
+  stroke: #b38a2b !important;
+}
+
+/* Restore the free-text search box border. The Yotpo widget build served on
+   EDS ships a stylesheet that resets this container's border-width/style to 0
+   (leaving only the inline border-color), so the search pill renders borderless
+   here — while the native Magento PDP shows a 1px grey pill. !important is
+   required to beat Yotpo's own cross-origin rule. It is also content-box on the PaaS PDP
+   (178x35 = 176x33 + 1px border); the legacy `.yotpo` reset forces border-box, which shrinks the
+   content area and pushes the input out of the pill. */
+.yotpo-widget-instance .yotpo-search-filter {
+  border: 1px solid #949494 !important;
+  box-sizing: content-box;
+}
+
+/* ...and the input inside it is 140px wide on PaaS (intrinsic, `min-width: auto`); on EDS a
+   148px minimum applies, so input + search button (148 + 32) overflow the 176px pill and the
+   input's left edge is clipped. */
+.yotpo-widget-instance .yotpo-search-filter .yotpo-search-input {
+  min-width: auto;
+}
+
+/* --- EDS <-> native-PDP parity for the reviews summary ------------------------
+   The same Yotpo build (ReviewsMainWidget) renders on both pages, but the styles
+   that win differ. On the native Magento PDP, Yotpo's inline design \3c style>
+   (16px / normal line-height / 22px bar gaps) wins. On EDS, Yotpo's cross-origin
+   widget.css overrides those same nodes down to 14px / line-height:17px and
+   collapses the histogram bar's side margins to 0 -- shrinking fonts, squishing
+   the score, and cramping the histogram horizontally. The root font-size
+   (62.5% / 10px) is identical on both pages and Yotpo sizes in px, so it is NOT
+   the cause. We restore Yotpo's intended values, scoped to the widget. */
+
+/* Restore the 16px / normal base the PDP renders (EDS forces 14px / 17px). */
+.yotpo-widget-instance,
+.yotpo-widget-instance .yotpo-base-layout,
+.yotpo-widget-instance .yotpo-bottom-line,
+.yotpo-widget-instance .yotpo-bottom-line-summary,
+.yotpo-widget-instance .yotpo-star-distribution,
+.yotpo-widget-instance .yotpo-distribution-row__list-item,
+.yotpo-widget-instance .yotpo-star-distribution-row-wrapper,
+.yotpo-widget-instance .yotpo-star-distribution-index-wrapper,
+.yotpo-widget-instance .yotpo-star-distribution-bar {
+  font-size: 16px !important;
+  line-height: normal !important;
+}
+
+/* The rating label (5..1) and the per-row count stay at 14px, as on the PDP. */
+.yotpo-widget-instance .yotpo-star-distribution-index,
+.yotpo-widget-instance .yotpo-star-distribution-value {
+  font-size: 14px !important;
+}
+
+/* The big score glyph is 48px on both pages; only its line-height was squished. */
+.yotpo-widget-instance .yotpo-bottom-line-score {
+  font-size: 48px !important;
+  line-height: normal !important;
+}
+
+/* Histogram bar: restore the 22px side gaps (number | bar | count) that EDS
+   collapses to 0, and vertically centre the 6px track against the star (EDS
+   drops the offset the PDP uses). The track width itself is left to Yotpo -- it
+   is computed responsively from the container width, so at equal viewport widths
+   EDS and the PDP already agree; pinning a fixed width would only desync them. */
+.yotpo-widget-instance .yotpo-star-distribution-bar {
+  display: flex;
+  align-items: center;
+  margin: 0 22px !important;
+}
+
+/* Restore the vertical spacing between histogram rows (~39px pitch on the PDP;
+   EDS leaves them cramped at ~25px). Row height is ~28px, so an 11px bottom
+   margin reproduces the PDP pitch. */
+.yotpo-widget-instance .yotpo-distribution-row__list-item {
+  margin-bottom: 11px;
+}
+
+/* --- Empty states ("We're looking for stars!", "Have a question?") --------------------
+   The EDS block is itself named `yotpo`, so its wrapper is `.yotpo.block`. Yotpo's legacy
+   widget.css resets everything under a `.yotpo` ancestor
+   (`.yotpo div, .yotpo span, .yotpo p ... { line-height: 17px; margin: 0; ... }`) -- a rule the
+   PaaS PDP never triggers because nothing there is named `.yotpo`. That reset out-specifies
+   Yotpo's own single-class rules for these nodes, so the empty-state text collapses: 17px lines
+   under 16-20px text, and the title/body/container margins are zeroed. Restore the values the
+   PaaS PDP renders (verified against shun.kaiusa.com). Two-class selectors beat the reset. */
+.yotpo-widget-instance .yotpo-header-headline {
+  font-size: 20px;
+  line-height: normal;
+}
+
+.yotpo-widget-instance .yotpo-empty-state.yotpo-qna-empty-state {
+  margin-top: 90px;
+}
+
+.yotpo-widget-instance .yotpo-empty-state .yotpo-title-text {
+  margin: 8px 0 24px;
+  line-height: normal;
+}
+
+.yotpo-widget-instance .yotpo-empty-state .yotpo-body-text {
+  margin: 0 0 24px;
+  line-height: normal;
+}
+
+/* Selected tab underline ("Reviews | Q&A"). The Q&A widget's stylesheet ships
+   `.ugc-storefront-widgets-tabs-container .ugc-storefront-widgets-tabs-container__tab.selected
+   { border-bottom: 1px solid var(--2b5ce1f8) }` -- a variable that is never defined (its
+   sibling rule uses the defined `--v2b5ce1f8`). An undefined var() invalidates the whole
+   declaration, so the underline falls back to none. It has the same specificity as Yotpo's valid
+   rules, so whichever widget injects its CSS last wins: the valid one on the PaaS PDP, the broken
+   one here. A more specific rule makes the result independent of injection order. */
+.yotpo-widget-instance .yotpo-main-widget-tabs .ugc-storefront-widgets-tabs-container__tab.selected {
+  border-bottom: 1px solid var(--yotpo-pure-black, #000);
+}
+
+/* --- Q&A list + search pill: more zeroed-out values from the legacy `.yotpo` reset ------
+   Same root cause as the empty states above (the block is named `yotpo`, so Yotpo's legacy
+   widget.css resets everything inside it). Values verified against kershaw.kaiusa.com. */
+
+/* Each question/answer item: 32px above and below (EDS zeroes it, so the answer's
+   "By Store Owner" sits directly on the next item's separator line). */
+.yotpo-widget-instance .yotpo-question {
+  margin: 32px 0;
+}
+
+/* Header links (reviews / Q&A count) scroll the tab strip into view; keep it clear of the
+   fixed EDS header instead of tucking it underneath. */
+.yotpo-widget-instance .yotpo-main-widget-tabs {
+  scroll-margin-top: 120px;
+}
+
+/* Standalone Q&A (the fallback used when the account's Q&A widget is not embedded as a tab of the
+   reviews widget): its 960px column has no `.yotpo-base-layout` parent, unlike the tabbed
+   layout on the PaaS PDP where Reviews and Q&A share one centred column, and the legacy `.yotpo`
+   reset zeroes its auto margins -- so it sits at the left edge, 120px off the reviews column. */
+.yotpo-widget-instance.yotpo-qna .yotpo-main-layout {
+  margin-left: auto;
+  margin-right: auto;
 }

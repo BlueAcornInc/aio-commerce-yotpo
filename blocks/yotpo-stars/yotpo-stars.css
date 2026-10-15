@@ -4,3 +4,65 @@
   display: block;
   float: left;
 }
+
+/* Self-rendered PDP star summary (the native ReviewsStarRatingsWidget does not
+   render in EDS — see blocks/yotpo-stars/yotpo-stars.js). */
+.yotpo-stars-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+/* SVG polygon stars — flex container, gap matches the native Yotpo spacing. */
+.yotpo-stars-summary__stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+/* Plain near-black text, matching the original native bottomline's "N Reviews".
+   Scoped under the wrapper to outrank the EDS `.dropin-design a` link color. */
+.yotpo-stars-summary .yotpo-stars-summary__count {
+  font-size: 16px;
+  font-weight: 400;
+  color: #231f20;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Q&A count next to the reviews count — mirrors the v2 header's
+   "33 Questions \ 33 Answers" pairing, separated by the native "\" divider. */
+.yotpo-stars-summary .yotpo-stars-summary__qna-count {
+  font-size: 16px;
+  font-weight: 400;
+  color: #231f20;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* The leading "\\" is only a separator between the reviews count and this link. inline-block
+   keeps the link's hover underline (text-decoration is not propagated into inline-blocks) from
+   being drawn under it as a detached stub. */
+.yotpo-stars-summary .yotpo-stars-summary__qna-count::before {
+  display: inline-block;
+  content: "\\";
+  margin-right: 8px;
+  color: #231f20;
+  text-decoration: none;
+}
+
+/* "Ask a question" shown when a product has no questions yet — matches the v2 header's
+   QABottomLine: small blue link on its own line under the stars. */
+.yotpo-stars-summary .yotpo-stars-summary__qna-ask {
+  flex-basis: 100%;
+  font-size: 13px;
+  font-weight: 400;
+  color: #2a76d3;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.yotpo-stars-summary .yotpo-stars-summary__qna-ask:hover {
+  text-decoration: underline;
+}

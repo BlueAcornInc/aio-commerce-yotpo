@@ -1,0 +1,21 @@
+{
+  "definitions": [
+    {
+      "title": "Yotpo Stars",
+      "id": "yotpo-stars",
+      "model": "yotpo-stars",
+      "plugins": {
+        "da": {
+          "type": "block"
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "yotpo-stars",
+      "fields": []
+    }
+  ],
+  "filters": []
+}

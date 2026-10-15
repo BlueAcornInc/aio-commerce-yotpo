@@ -41,8 +41,6 @@ jobs:
         env:
           AIO_RUNTIME_NAMESPACE: ${{ vars.AIO_RUNTIME_NAMESPACE_PROD }}
           COMMERCE_ENDPOINT: ${{ vars.COMMERCE_ENDPOINT }}
-          ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
-          ENCRYPTION_IV: ${{ secrets.ENCRYPTION_IV }}
         uses: adobe/aio-apps-action@3.3.0
         with:
           os: ${{ matrix.os }}
@@ -58,8 +56,6 @@ jobs:
           AIO_PROJECT_WORKSPACE_NAME: ${{ vars.AIO_PROJECT_WORKSPACE_NAME_PROD }}
           AIO_PROJECT_WORKSPACE_DETAILS_SERVICES: ${{ vars.AIO_PROJECT_WORKSPACE_DETAILS_SERVICES_PROD }}
           COMMERCE_ENDPOINT: ${{ vars.COMMERCE_ENDPOINT }}
-          ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
-          ENCRYPTION_IV: ${{ secrets.ENCRYPTION_IV }}
         uses: adobe/aio-apps-action@3.3.0
         with:
           os: ${{ matrix.os }}

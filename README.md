@@ -35,7 +35,7 @@ Before installing this extension, ensure you have the following:
 
 - **Adobe Developer App Builder Project:** An active App Builder project configured for your Adobe Commerce instance's organization.
 
-- **Yotpo Account:** A valid Yotpo account with an **App Key** and **Secret Key**.
+- **Yotpo Account:** A valid Yotpo account and its **App Key** (store ID).
 
 - **Node.js and npm/yarn:** For local development and testing of the App Builder application.
 
@@ -97,63 +97,32 @@ You can install this extension by downloading it directly from the repository.
 
       If you didn't use `aio app use`, follow the prompts to select your App Builder project and workspace.
 
-5.  **Configure Yotpo Settings in Adobe Commerce Backend:** After deploying the App Builder app, you **must** configure your Yotpo settings in your Adobe Commerce Admin panel as described in the [Configuration (Adobe Commerce Backend)](#configuration-adobe-commerce-backend) section.
+5.  **Configure Yotpo in App Management:** after deploying, install and configure the app as described in [Configuration (App Management)](#configuration-app-management).
 
 ---
 
-## Configuration (Adobe Commerce Backend)
+## Configuration (App Management)
 
-All Yotpo-specific configurations for this extension are managed by the merchant directly within the **Adobe Commerce Admin Panel**. The deployed Adobe App Builder application will then retrieve these settings at runtime.
+Since v2.0.0, Yotpo is configured through **Adobe Commerce App Management**, not a custom admin page.
 
-1.  **Access Yotpo Configuration in Adobe Commerce:**
-    - Log in to your Adobe Commerce Admin Panel.
-    - Navigate to **Yotpo \> General Configuration** in the left-hand navigation menu.
+1.  **Install the app:** in Commerce Admin, go to **Apps > App Management** and install Yotpo into your instance.
+2.  **Configure it:** open the app's configuration in App Management and set, at the scope you need:
+    - **Status:** `On` to enable the storefront widgets.
+    - **App Key:** your Yotpo store ID, from Yotpo > Settings > Store. It's public by design: the storefront uses it to load Yotpo.
+    - **Widget Instance ID** (optional): the star ratings widget instance. The reviews and Q&A widgets are found automatically.
+3.  **Scopes:** values follow the Commerce hierarchy (global > website > store > store view) and are inherited downwards. For several brands, set each brand's App Key on its own website or store view.
 
-2.  **Configure Yotpo Settings:** Fill in the following details using information provided by Yotpo:
-    - **Enable Yotpo Extension:** Select `Yes` or `No` to activate or deactivate the integration.
-    - **Yotpo App Key:** (Required) Your Yotpo App Key.
-    - **Yotpo Secret Key:** (Required) Your Yotpo Secret Key.
+The app stores **no secrets**, so it needs no encryption key.
 
-3.  **Save Configuration:** Click "**Save Config**" to apply your changes in Adobe Commerce.
+### Upgrading from v1.x
 
-4.  **Verify Functionality:** After configuration, test your frontend integration to ensure the App Builder app is correctly retrieving and utilizing the Yotpo settings.
-
----
-
-## Environment Variables (App Builder Operational)
-
-These environment variables are crucial for the **operational functioning and security of the Adobe App Builder application itself**. These are **not** the Yotpo-specific settings for your store, which are configured in the Adobe Commerce Admin.
-
-For **local development**, copy `env.dist` to `.env` in the root of the project and fill in the values. For **deployed environments via CI/CD**, these variables are configured directly within the Adobe Developer Console UI for your specific App Builder workspace/action.
-
-- `ENCRYPTION_KEY`
-  - **Description:** A 32-byte (64-character hexadecimal string) key used by the App Builder application for internal encryption operations.
-
-  - **How to Generate:** You can generate a secure key using `openssl`:
-
-    ```bash
-    openssl rand -hex 32
-    ```
-
-- `ENCRYPTION_IV`
-  - **Description:** A 16-byte (32-character hexadecimal string) Initialization Vector (IV) used in conjunction with the `ENCRYPTION_KEY` for encryption.
-
-  - **How to Generate:** You can generate a secure IV using `openssl`:
-
-    ```bash
-    openssl rand -hex 16
-    ```
-
-**Important Notes:**
-
-- **Security:** It's crucial to generate strong, unique values for `ENCRYPTION_KEY` and `ENCRYPTION_IV`.
-- **Don't Commit `.env`:** If you're using a `.env` file for local development, **DO NOT commit it to your version control system (e.g., Git)**. Add `.env` to your `.gitignore` file.
+v1 stored its settings in a custom admin page that App Management doesn't read. After upgrading, open the app in App Management and re-enter the **App Key** and **Status** (and the instance ID, if you used one). The v1 "Secret Key" is no longer used and can be discarded.
 
 ---
 
 ## Usage
 
-Once the App Builder application is deployed and its settings are configured in the Adobe Commerce backend, your Adobe Commerce frontend can consume the Yotpo configuration through the App Builder API endpoint.
+Once the App Builder application is deployed and configured in App Management, your Adobe Commerce frontend can consume the Yotpo configuration through the App Builder API endpoint.
 
 **Adobe Commerce Storefront and Edge Delivery Services Blocks**
 

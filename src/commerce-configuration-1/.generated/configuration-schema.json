@@ -1,0 +1,36 @@
+[
+  {
+    "default": "off",
+    "description": "Turn the Yotpo storefront widgets on or off",
+    "label": "Status",
+    "name": "status",
+    "options": [
+      {
+        "label": "On",
+        "value": "on"
+      },
+      {
+        "label": "Off",
+        "value": "off"
+      }
+    ],
+    "selectionMode": "single",
+    "type": "list"
+  },
+  {
+    "description": "Your Yotpo store ID (app key), from Yotpo > Settings > Store. Public by design.",
+    "label": "App Key",
+    "name": "appKey",
+    "requiredIf": {
+      "field": "status",
+      "value": "on"
+    },
+    "type": "text"
+  },
+  {
+    "description": "Optional. The Yotpo star ratings widget instance ID. The reviews and Q&A widgets are found automatically.",
+    "label": "Widget Instance ID",
+    "name": "instanceId",
+    "type": "text"
+  }
+]

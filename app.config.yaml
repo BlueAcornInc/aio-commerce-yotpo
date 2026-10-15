@@ -1,11 +1,30 @@
+application:
+  runtimeManifest:
+    packages:
+      yotpo:
+        license: Apache-2.0
+        actions:
+          # Storefront-facing: returns the public Yotpo settings for a store view.
+          public-config:
+            function: src/actions/public-config/index.js
+            web: "yes"
+            runtime: nodejs:22
+            inputs:
+              LOG_LEVEL: info
+            annotations:
+              require-adobe-auth: false
+              final: true
+
 extensions:
-  commerce/backend-ui/1:
-    $include: src/commerce-backend-ui-1/ext.config.yaml
-operations:
-  view:
-    - type: web
-      impl: web
-requiredProducts:
+  # This extension is required for business configuration. Do not remove.
+  commerce/configuration/1:
+    $include: src/commerce-configuration-1/ext.config.yaml
+
+  # This extension is required for app management. Do not remove.
+  commerce/extensibility/1:
+    $include: src/commerce-extensibility-1/ext.config.yaml
+
+productDependencies:
   - code: COMMC
-    minVersion: 2.4.5
+    minVersion: 2.4.7
     maxVersion: 2.4.99

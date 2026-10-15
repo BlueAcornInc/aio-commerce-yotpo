@@ -1,0 +1,21 @@
+{
+  "definitions": [
+    {
+      "title": "Yotpo",
+      "id": "yotpo",
+      "model": "yotpo",
+      "plugins": {
+        "da": {
+          "type": "block"
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "yotpo",
+      "fields": []
+    }
+  ],
+  "filters": []
+}
