@@ -372,14 +372,16 @@ export default async function decorate(block) {
       // a while to appear (or never does, e.g. no Q&A widget published for the account), and
       // that must not delay this block finishing loading. The link is added if and when the
       // surface shows up; otherwise it is omitted — no dangling link.
-      fetchQnaCounts(appKey, productId).then((qnaTotal) => {
-        if (!qnaTotal) return undefined;
-        return waitForQnaSurface().then((found) => {
-          if (found) appendQnaLink(wrap, qnaTotal);
+      fetchQnaCounts(appKey, productId)
+        .then((qnaTotal) => {
+          if (!qnaTotal) return undefined;
+          return waitForQnaSurface().then((found) => {
+            if (found) appendQnaLink(wrap, qnaTotal);
+          });
+        })
+        .catch(() => {
+          // best-effort enhancement — never surface an unhandled rejection
         });
-      }).catch(() => {
-        // best-effort enhancement — never surface an unhandled rejection
-      });
     } catch (e) {
       // silent degradation — no star summary rather than a broken one
     }

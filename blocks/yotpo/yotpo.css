@@ -188,7 +188,9 @@
    declaration, so the underline falls back to none. It has the same specificity as Yotpo's valid
    rules, so whichever widget injects its CSS last wins: the valid one on the PaaS PDP, the broken
    one here. A more specific rule makes the result independent of injection order. */
-.yotpo-widget-instance .yotpo-main-widget-tabs .ugc-storefront-widgets-tabs-container__tab.selected {
+.yotpo-widget-instance
+  .yotpo-main-widget-tabs
+  .ugc-storefront-widgets-tabs-container__tab.selected {
   border-bottom: 1px solid var(--yotpo-pure-black, #000);
 }
 
