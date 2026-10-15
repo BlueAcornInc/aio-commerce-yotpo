@@ -4,7 +4,9 @@ on:
   push:
     branches:
       - main
-  # Deploy a branch to the Stage workspace to test it before merging.
+      # Push a branch as stage/<name> to deploy it to the Stage workspace
+      # and test it before it merges.
+      - "stage/**"
   workflow_dispatch:
 jobs:
   deploy:
