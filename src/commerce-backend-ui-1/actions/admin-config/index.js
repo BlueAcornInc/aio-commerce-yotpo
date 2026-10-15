@@ -4,6 +4,40 @@ const {
   writeConfiguration,
 } = require("../../../shared/configurationHelper");
 
+const REQUIRED_FIELDS = ["appKey", "status", "instanceId"];
+
+/**
+ * The fields the admin UI may see. The API secret is write-only: it is never
+ * returned, only reported as present or absent.
+ *
+ * @param {object} config Stored configuration
+ * @returns {object} Configuration safe to return to the browser
+ */
+function toPublicConfig(config = {}) {
+  return {
+    appKey: config.appKey,
+    status: config.status,
+    instanceId: config.instanceId,
+    hasApiSecret: Boolean(config.apiSecret),
+  };
+}
+
+/**
+ * Read the stored API secret, if any, so a save without a new secret keeps it.
+ *
+ * @param {object} params Action params
+ * @param {string} name Configuration name
+ * @returns {Promise<string|undefined>} The stored secret, or undefined
+ */
+async function readStoredApiSecret(params, name) {
+  try {
+    const existing = await readConfiguration(params, name);
+    return existing?.apiSecret;
+  } catch {
+    return undefined;
+  }
+}
+
 /**
  * Main admin action
  *
@@ -16,26 +50,31 @@ async function main(params) {
 
   // Check the method
   if (params.__ow_method === "post") {
-    const { appKey, apiSecret, status, instanceId } = params.payload;
+    const payload = params.payload || {};
+    const missing = REQUIRED_FIELDS.filter((field) => !payload[field]);
 
-    if (!appKey || !apiSecret || !status || !instanceId) {
-      logger.error("Missing field for request", params);
+    if (missing.length > 0) {
+      // Field names only: params carries credentials and is never logged.
+      logger.warn(`Missing required fields: ${missing.join(", ")}`);
       return {
         statusCode: 400,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          error:
-            "Missing required fields (appKey, apiSecret, status, instanceId).",
-          receivedParams: params,
+          error: `Missing required fields (${missing.join(", ")}).`,
         }),
       };
     }
 
+    const { appKey, status, instanceId } = payload;
+    // Write-only secret: a blank value keeps the stored one.
+    const apiSecret =
+      payload.apiSecret || (await readStoredApiSecret(params, name));
+
     const configToStore = {
       appKey,
-      apiSecret,
       status,
       instanceId,
+      ...(apiSecret ? { apiSecret } : {}),
     };
 
     try {
@@ -47,7 +86,7 @@ async function main(params) {
         body: JSON.stringify({
           success: true,
           message: "Saved Yotpo config",
-          savedConfig: configToStore,
+          savedConfig: toPublicConfig(configToStore),
         }),
       };
     } catch (error) {
@@ -70,7 +109,7 @@ async function main(params) {
         body: JSON.stringify({
           success: true,
           message: "Loaded Yotpo config",
-          config: loadedConfig,
+          config: toPublicConfig(loadedConfig),
         }),
       };
     } catch (error) {

@@ -18,7 +18,14 @@ export function useYotpoConfigLoader(props, setFormState) {
       try {
         const data = await callAction(props, "yotpo/admin-config", "GET");
         if (data) {
-          setFormState((prevState) => ({ ...prevState, ...data.config }));
+          // The API secret is write-only: the action never returns it.
+          const { hasApiSecret, ...config } = data.config || {};
+          setFormState((prevState) => ({
+            ...prevState,
+            ...config,
+            apiSecret: "",
+            hasApiSecret,
+          }));
         }
         setStatusMsg("Config loaded successfully");
         setHasError(false);

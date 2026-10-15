@@ -44,7 +44,8 @@ export default function YotpoConfigForm(props) {
   };
 
   const handleSave = async () => {
-    saveConfig(formState);
+    const { hasApiSecret, ...config } = formState;
+    saveConfig(config);
   };
 
   const links = [
@@ -89,9 +90,14 @@ export default function YotpoConfigForm(props) {
         />
         <TextField
           label="API Secret"
+          type="password"
           value={formState.apiSecret}
           onChange={(val) => handleChange("apiSecret", val)}
-          isRequired
+          description={
+            formState.hasApiSecret
+              ? "A secret is saved. Leave blank to keep it."
+              : undefined
+          }
           isDisabled={loadHasError}
         />
         <TextField
