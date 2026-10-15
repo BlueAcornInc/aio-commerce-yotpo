@@ -37,7 +37,7 @@ describe("Yotpo public storefront config", () => {
   test("returns only the public fields for the requested store view", async () => {
     storedConfig({
       status: "on",
-      appKey: "store-app-key",
+      appKey: "storeappkey123",
       instanceId: "123",
       unexpectedField: "not-public",
     });
@@ -47,7 +47,7 @@ describe("Yotpo public storefront config", () => {
     expect(response.statusCode).toBe(200);
     expect(response.body).toEqual({
       status: "on",
-      appKey: "store-app-key",
+      appKey: "storeappkey123",
       instanceId: "123",
     });
     expect(libConfig.byCodeAndLevel).toHaveBeenCalledWith(
@@ -56,8 +56,37 @@ describe("Yotpo public storefront config", () => {
     );
   });
 
+  test("passes the touchpoint switches through", async () => {
+    storedConfig({
+      status: "on",
+      appKey: "storeappkey123",
+      showReviews: true,
+      showQna: false,
+      showCartStars: true,
+      trackConversions: false,
+    });
+
+    const { body } = await main({});
+
+    expect(body).toMatchObject({
+      showReviews: true,
+      showQna: false,
+      showCartStars: true,
+      trackConversions: false,
+    });
+  });
+
+  test("reports off when the app key has stray characters", async () => {
+    storedConfig({ status: "on", appKey: "storeappkey123." });
+
+    const response = await main({});
+
+    expect(response.body).toEqual({ status: "off" });
+    expect(mockLogger.warn).toHaveBeenCalled();
+  });
+
   test("defaults to the default store view", async () => {
-    storedConfig({ status: "on", appKey: "store-app-key" });
+    storedConfig({ status: "on", appKey: "storeappkey123" });
 
     await main({});
 
@@ -68,7 +97,7 @@ describe("Yotpo public storefront config", () => {
   });
 
   test("reports off when disabled or missing an app key", async () => {
-    storedConfig({ status: "off", appKey: "store-app-key" });
+    storedConfig({ status: "off", appKey: "storeappkey123" });
     expect((await main({})).body).toEqual({ status: "off" });
 
     storedConfig({ status: "on" });
@@ -83,14 +112,14 @@ describe("Yotpo public storefront config", () => {
         );
       }
       return {
-        config: { name, value: { status: "on", appKey: "global-key" }[name] },
+        config: { name, value: { status: "on", appKey: "globalkey123" }[name] },
       };
     });
 
     const response = await main({});
 
     expect(response.statusCode).toBe(200);
-    expect(response.body).toEqual({ status: "on", appKey: "global-key" });
+    expect(response.body).toEqual({ status: "on", appKey: "globalkey123" });
     expect(libConfig.byCodeAndLevel).toHaveBeenCalledWith("global", "global");
   });
 

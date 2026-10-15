@@ -14,8 +14,19 @@ const {
 } = require("@adobe/aio-commerce-lib-config");
 const schema = require("../../commerce-configuration-1/.generated/configuration-schema.json");
 
-const PUBLIC_FIELDS = ["status", "appKey", "instanceId"];
+const PUBLIC_FIELDS = [
+  "status",
+  "appKey",
+  "instanceId",
+  "showReviews",
+  "showStarSummary",
+  "showQna",
+  "showInlineStars",
+  "showCartStars",
+  "trackConversions",
+];
 const STORE_CODE_PATTERN = /^[a-z0-9_]{1,64}$/;
+const APP_KEY_PATTERN = /^[A-Za-z0-9]{8,64}$/;
 const DEFAULT_STORE_CODE = "default";
 
 const json = (statusCode, body) => ({
@@ -86,6 +97,13 @@ async function main(params) {
     const config = await readConfig(storeCode);
 
     if (config.status !== "on" || !config.appKey) {
+      return json(200, { status: "off" });
+    }
+    if (!APP_KEY_PATTERN.test(config.appKey)) {
+      // A stray character (a pasted trailing period, say) breaks every widget.
+      logger.warn(
+        "Configured app key has unexpected characters; reporting off.",
+      );
       return json(200, { status: "off" });
     }
     return json(200, config);

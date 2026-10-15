@@ -61,6 +61,53 @@ export default defineConfig({
         description:
           "Optional. The Yotpo star ratings widget instance ID. The reviews and Q&A widgets are found automatically.",
       },
+      {
+        name: "showReviews",
+        type: "boolean",
+        label: "Reviews widget",
+        description: "Show the reviews widget on product pages.",
+        default: true,
+      },
+      {
+        name: "showStarSummary",
+        type: "boolean",
+        label: "Star summary",
+        description:
+          "Show the star rating and review count by the product title.",
+        default: true,
+      },
+      {
+        name: "showQna",
+        type: "boolean",
+        label: "Questions and answers",
+        description:
+          "Show Yotpo Q&A on product pages (as a tab or below the reviews).",
+        default: true,
+      },
+      {
+        name: "showInlineStars",
+        type: "boolean",
+        label: "Stars on product listings",
+        description:
+          "Show star ratings on product tiles in listings, search and recommendations.",
+        default: true,
+      },
+      {
+        name: "showCartStars",
+        type: "boolean",
+        label: "Stars in the cart",
+        description:
+          "Show star ratings on cart, mini-cart and cross-sell product tiles.",
+        default: false,
+      },
+      {
+        name: "trackConversions",
+        type: "boolean",
+        label: "Conversion tracking",
+        description:
+          "Send order confirmations to Yotpo for conversion tracking. Not available yet.",
+        default: false,
+      },
     ],
   },
 });

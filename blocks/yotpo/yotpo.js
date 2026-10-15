@@ -167,6 +167,11 @@ export default async function decorate(block) {
     })
     .then(async (data) => {
       if (data?.status === "off") return;
+      // Touchpoint switches from App Management. Missing means on, so older
+      // config endpoints keep working.
+      const showReviews = data?.showReviews !== false;
+      const showQna = data?.showQna !== false;
+      if (!showReviews && !showQna) return;
 
       const productId = await resolveProductId();
 
@@ -209,7 +214,9 @@ export default async function decorate(block) {
       // `data?.instanceId` (from public-config) is the StarRatings instance, not Reviews — never
       // use it as a fallback here. If no ReviewsMainWidget instance is published for this account,
       // skip mounting rather than render a widget pointed at the wrong id.
-      const mainWidgetInstanceId = getMainWidgetInstanceId(data?.appKey);
+      const mainWidgetInstanceId = showReviews
+        ? getMainWidgetInstanceId(data?.appKey)
+        : null;
       let yotpoEl = null;
       if (mainWidgetInstanceId) {
         yotpoEl = document.createElement("div");
@@ -250,7 +257,7 @@ export default async function decorate(block) {
       const qnaInstanceId = qnaWidget?.instanceId || null;
       const qnaEmbedded =
         qnaWidget?.customizations?.["qna-embedded-mode-enabled"] === "embedded";
-      if (qnaInstanceId && !(qnaEmbedded && mainWidgetInstanceId)) {
+      if (showQna && qnaInstanceId && !(qnaEmbedded && mainWidgetInstanceId)) {
         const qnaEl = document.createElement("div");
         qnaEl.id = "yotpo-qna-widget";
         qnaEl.className = "yotpo-widget-instance yotpo-qna";

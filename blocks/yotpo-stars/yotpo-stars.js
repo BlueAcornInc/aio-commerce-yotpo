@@ -41,6 +41,16 @@ const withStoreCode = async (endpoint, getConfigValue) => {
 };
 
 export default async function decorate(block) {
+  // Touchpoint switches from App Management. Missing means on (cart stars
+  // default off in the app config), so older config endpoints keep working.
+  let flags = {};
+  const isOn = (name) => flags[name] !== false;
+  const isCartTile = (tile) =>
+    Boolean(
+      tile.closest(
+        ".commerce-cart, .commerce-mini-cart, .cart-cross-sell-products, .cart",
+      ),
+    ) || /^\/cart\b/.test(window.location.pathname);
   const getConfigValue = await resolveGetConfigValue();
   const cfg = {
     endpoint: await withStoreCode(
@@ -372,7 +382,7 @@ export default async function decorate(block) {
       // a while to appear (or never does, e.g. no Q&A widget published for the account), and
       // that must not delay this block finishing loading. The link is added if and when the
       // surface shows up; otherwise it is omitted — no dangling link.
-      fetchQnaCounts(appKey, productId)
+      (isOn("showQna") ? fetchQnaCounts(appKey, productId) : Promise.resolve(0))
         .then((qnaTotal) => {
           if (!qnaTotal) return undefined;
           return waitForQnaSurface().then((found) => {
@@ -515,7 +525,9 @@ export default async function decorate(block) {
    */
   const processTiles = async (tiles, appKey) => {
     const unprocessed = tiles.filter(
-      (tile) => !tile.querySelector(".yotpo-stars-summary"),
+      (tile) =>
+        !tile.querySelector(".yotpo-stars-summary") &&
+        isOn(isCartTile(tile) ? "showCartStars" : "showInlineStars"),
     );
     const skus = unprocessed.map((tile) => getTileSku(tile)).filter(Boolean);
     const entityIdBySku = await getEntityIdsBySku(skus);
@@ -594,9 +606,12 @@ export default async function decorate(block) {
 
     const { appKey, status } = data;
     if (status === "off") return;
+    flags = data;
 
     // Set up observer FIRST so tiles that render during the awaits below are caught.
-    setupTileObserver(appKey, status);
+    if (isOn("showInlineStars") || isOn("showCartStars")) {
+      setupTileObserver(appKey, status);
+    }
 
     // Process any product tiles already in the DOM (PLP / pre-rendered recommendations).
     const existingTiles = collectProductTiles();
@@ -607,7 +622,10 @@ export default async function decorate(block) {
     // PDP: render star summary near the product title.
     // Runs when the URL is a product detail page (/products/{url-key}).
     // Also covers PDPs where recommendations have already rendered by this point.
-    if (/^\/products\//.test(window.location.pathname)) {
+    if (
+      isOn("showStarSummary") &&
+      /^\/products\//.test(window.location.pathname)
+    ) {
       const sku = getProductSku() || "";
       const productId = (await getEntityIdsBySku([sku])).get(sku) || sku;
       await renderStarSummary(block, appKey, productId);
